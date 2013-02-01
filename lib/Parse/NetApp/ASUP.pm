@@ -7,7 +7,11 @@ Parse NetApp Weekly Auto Support Files
 =head1 USAGE:
 
   use Parse::NetApp::ASUP;
-
+  
+  my $pna = Parse::NetApp::ASUP->new();
+  
+  $pna->load($raw_asup_data_as_scalar);
+  
 =cut 
 
 use Carp;
@@ -17,10 +21,33 @@ use warnings;
 
 package Parse::NetApp::ASUP;
 
+=head3 new() 
+
+Instance a new parser.
+
+=cut
+
 sub new {
 	my $self = {};
 	bless $self;
 	return $self;
+}
+
+=head3 load($raw_asup_data) 
+
+Load a raw asup data file for parsing.
+
+=cut
+
+sub load {
+  my $self = shift @_;
+  my $asup = shift @_;
+  if ( not defined $asup or not length $asup ) {
+    warn "load() called without input data.";
+    return undef;
+  }
+  $self->{asup} = $asup;
+  return 1;
 }
 
 sub version {
@@ -52,6 +79,10 @@ sub _regex_path {
 }
 
 ### Sectional extract methods
+
+=head1 EXTRACT METHODS:
+
+=cut
 
 sub extract_acp_list_all {
 	my $raw = $_[0];
