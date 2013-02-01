@@ -2340,7 +2340,7 @@ sub asup_version {
 	return $version ? $version : 'unknown';
 }	
 
-=head3 ASUP::dave($raw)
+=head3 Parse::NetApp::ASUP::dave($raw)
 
 Given the entire text of an ASUP, it returns a "dave" version of the file.
 
@@ -2527,7 +2527,7 @@ sub extract {
   return $extracts;
 }
 
-=head3 Parse::NetApp::ASUP::parse($raw)
+=head3 Parse::NetApp::Parse::NetApp::ASUP::parse($raw)
 
 Given the entire text of an ASUP, it returns an array of hash references
 that are used in the LOE generator:
@@ -2560,14 +2560,14 @@ sub parse {
 
 	# Parse header data;
 
-	my %header = ASUP::parse_header($header);
+	my %header = Parse::NetApp::ASUP::parse_header($header);
 	Interface::message("Filer version is $header{short_version}");
-	my %xheader = ASUP::parse_xheader($xheader);
+	my %xheader = Parse::NetApp::ASUP::parse_xheader($xheader);
         for my $key ( keys %xheader ) { $header{$key} = $xheader{$key} unless defined $header{$key}; }
 
 	# Parse sysconfig data
 
-	my %sysconfig = ASUP::parse_sysconfig($sysconfig_a);
+	my %sysconfig = Parse::NetApp::ASUP::parse_sysconfig($sysconfig_a);
 
 	# Add to header info, unless already there
 	for my $key ( keys %sysconfig ) {
@@ -2584,17 +2584,17 @@ sub parse {
 
 	# Parse LUN CONFiguration
 
-	my %luns = ASUP::parse_lun($lun_conf);
+	my %luns = Parse::NetApp::ASUP::parse_lun($lun_conf);
 	Interface::message("No lun data found.") unless scalar( keys %luns ) or not defined $lun_conf;
 
 	# Parse DF
 
-	my %vols = ASUP::parse_df($df);
+	my %vols = Parse::NetApp::ASUP::parse_df($df);
 	Interface::warning("NO VOLUME DATA!") unless scalar( keys %vols );
 
 	# Parse qtree status data
 
-	my %qtree = ASUP::parse_qtree($qtree_stat);
+	my %qtree = Parse::NetApp::ASUP::parse_qtree($qtree_stat);
 
 	# Form a deduped list of styles of qtree on each volume for the Volume tab
 	my %dedupe;
@@ -2611,7 +2611,7 @@ sub parse {
 
 	# parse Volstatus data
 
-	my %volstatus = ASUP::parse_volstatus($vol_status);
+	my %volstatus = Parse::NetApp::ASUP::parse_volstatus($vol_status);
 
 	# Add to vol info, unless already there
 	for my $volume ( keys %volstatus ) {
@@ -2627,7 +2627,7 @@ sub parse {
 
 	# Parse Export dara
 
-	my %export = ASUP::parse_export($export);
+	my %export = Parse::NetApp::ASUP::parse_export($export);
 
 	for my $exported ( keys %export ) {
 		for my $volume ( keys %vols ) {
