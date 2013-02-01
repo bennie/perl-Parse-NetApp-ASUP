@@ -1,6 +1,6 @@
 Changes
-examples/7.0.3/1071053.txt
-lib/Pase/NetApp/ASUP.pm
+examples/7.0.3/asup01.txt
+lib/Parse/NetApp/ASUP.pm
 Makefile.PL
 MANIFEST
 README
