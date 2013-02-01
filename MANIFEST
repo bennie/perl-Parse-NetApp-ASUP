@@ -1,7 +1,9 @@
 Changes
+examples/7.0.3/1071053.txt
 lib/Pase/NetApp/ASUP.pm
 Makefile.PL
 MANIFEST
 README
 t/01-load.t
+t/02-asup-v7.0.3.t
 META.yml
