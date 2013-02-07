@@ -1,4 +1,8 @@
 Changes
+MANIFEST
+META.yml
+Makefile.PL
+README
 examples/7.0.3/asup01.txt
 examples/7.0.3/asup02.txt
 examples/7.0.3/asup03.txt
@@ -8,10 +12,8 @@ examples/7.2.3/asup02.txt
 examples/7.2.3/asup03.txt
 examples/8.1/asup01.txt
 lib/Parse/NetApp/ASUP.pm
-Makefile.PL
-MANIFEST
-README
 t/01-load.t
+t/load.t
 t/v7.0.3-01.t
 t/v7.0.3-02.t
 t/v7.0.3-03.t
@@ -20,4 +22,3 @@ t/v7.2.3-01.t
 t/v7.2.3-02.t
 t/v7.2.3-03.t
 t/v8.1-01.t
-META.yml

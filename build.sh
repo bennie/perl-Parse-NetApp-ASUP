@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-MODULE='lib/Parse/NetApp/Login.pm'
+MODULE='lib/Parse/NetApp/ASUP.pm'
 VERSION=`cvs status $MODULE | grep Working | awk '{ print $3 }' | tr '.' ' ' | awk '{ printf "%d.%02d", $1, $2 }'`
 DATE=`date '+%Y/%m/%d'`
 YEAR=`date '+%Y'`

@@ -1,5 +1,9 @@
 $Parse::NetApp::ASUP::VERSION='VERSIONTAG';
 
+=head1 NAME:
+
+Parse::NetApp::ASUP - Parse NetApp Weekly Auto Support Files
+
 =head1 SYNOPSIS:
 
 Parse NetApp Weekly Auto Support Files
