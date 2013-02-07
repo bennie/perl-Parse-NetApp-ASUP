@@ -83,5 +83,11 @@ for my $asup ( sort @asups ) {
   close OUTFILE;
 }
 
+###
 
+print "Rebuilding MANIFEST\n";
 
+`cat MANIFEST > /tmp/MANIFEST`;
+`find t -type f -name *.t >> /tmp/MANIFEST`;
+`cat /tmp/MANIFEST | sort -u > MANIFEST`;
+`rm /tmp/MANIFEST`;
