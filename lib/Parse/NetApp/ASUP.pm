@@ -82,7 +82,853 @@ sub _regex_path {
   return qr/[\w\-\?\$\\]+/;
 }
 
-### Sectional extract methods
+=head1 GENERAL METHODS
+
+=head3 asup_version()
+
+Returns the version of the loaded ASUP file.
+
+=cut
+
+sub asup_version {
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
+	my $version;
+	for my $line ( split '\n', $raw ) {
+		next unless $line =~ /^VERSION=NetApp Release ([\w\.\d]+)/;
+		$version = $1;
+		last;
+	}
+	return $version if defined $version;	
+	for my $line ( split '\n', $raw ) {
+		next unless $line =~ /^X-Netapp-asup-os-version: NetApp Release ([\w\.\d]+)/;
+		$version = $1;
+		last;
+	}
+	return $version ? $version : 'unknown';
+}	
+
+=head3 extract($raw)
+
+This method attempts to return key and commonly used sections of the ASUP as
+a parsed data structure.
+
+=cut
+
+sub extract {
+  my $raw = shift @_;
+
+  my $version = Parse::NetApp::ASUP::asup_version($raw);  
+  $version =~ /^(\d)\.(\d)/;
+  my $maj = $1;
+  my $min = $2;
+
+  my $extracts;
+  
+  if ( $maj == 8 and $min > 0 ) {
+    my $export     = Parse::NetApp::ASUP::extract_exports($raw);
+    my $lun_conf   = Parse::NetApp::ASUP::extract_lun_configuration($raw);
+    my $qtree_stat = Parse::NetApp::ASUP::extract_qtree_status($raw);
+    my $xheader    = Parse::NetApp::ASUP::extract_xheader($raw);
+
+    $extracts = ASUP::iterative_extract($raw);
+    $extracts->{_METHOD} = 'Progressive';
+    
+    $extracts->{export}     = $export;
+    $extracts->{lun_conf}   = $lun_conf;
+    $extracts->{qtree_stat} = $qtree_stat;    
+    $extracts->{xheader}    = $xheader;
+  } else {
+    $extracts->{_METHOD} = 'Singular';
+    $extracts->{xml} = [];
+
+    $extracts->{df}           = Parse::NetApp::ASUP::extract_df($raw);
+    $extracts->{export}       = Parse::NetApp::ASUP::extract_exports($raw);
+    $extracts->{header}       = Parse::NetApp::ASUP::extract_headers($raw);
+    $extracts->{lun_conf}     = Parse::NetApp::ASUP::extract_lun_configuration($raw);
+    $extracts->{qtree_stat}   = Parse::NetApp::ASUP::extract_qtree_status($raw);
+    $extracts->{sysconfig_a}  = Parse::NetApp::ASUP::extract_sysconfig_a($raw);
+    $extracts->{vol_status}   = Parse::NetApp::ASUP::extract_vol_status($raw);
+    $extracts->{xheader}      = Parse::NetApp::ASUP::extract_xheader($raw);
+  }
+
+  $extracts->{_VERSION} = $version;        
+  return $extracts;
+}
+
+=head3 iterative_extract()
+
+Version 8 and higher extract has to be iterative
+
+=cut
+
+sub iterative_extract {
+  my $raw = shift @_;  
+  my %ex = ( xml => [] );
+ 
+  ($ex{mailheader},$ex{header},$raw) = split /\n\n+/, $raw, 3;
+
+  # Now dealing with CRLF and the occasional standalone LF
+  
+  my @lines = Parse::NetApp::ASUP::_agnostic_line_split($raw);
+
+  # sysconfig -a
+  
+  while ( $lines[0] =~ /^(\t|\s{5})/ ) {
+    $ex{sysconfig_a} .= (shift @lines) . "\n";
+  }
+
+  # sysconfig -d 
+
+  $ex{sysconfig_d} .= (shift @lines) . "\n" if ( $lines[0] =~ /^Device/ );
+  $ex{sysconfig_d} .= (shift @lines) . "\n" if ( $lines[0] =~ /^------/ );
+  while ( $lines[0] =~ /^[0-9a-f]{2}\.[0-9a-f]{2}/ ) {
+    $ex{sysconfig_d} .= (shift @lines) . "\n";
+  }
+  
+  # sn
+
+  $ex{serialnum} = (shift @lines) . "\n" if $lines[0] =~ /^system serial number/;
+   
+  # options
+
+  while ( $lines[0] =~ /^[a-z_\-0-9]+(\.[a-z_\-0-9]+)+\s+/i ) {
+    $ex{options} .= (shift @lines) . "\n";
+  }
+
+  # service usage
+  
+  while ( $lines[0] =~ /^Service statistics as of/ ) {
+    $ex{service_usage} .= (shift @lines)."\n";
+    while ( $lines[0] =~ /^ \S+\s+\(\S+\).+recorded/ ) {
+      $ex{service_usage} .= (shift @lines)."\n";
+      while ( $lines[0] =~ /^\s+[A-Z](\s+\d+,){3}/ ) {
+        $ex{service_usage} .= (shift @lines)."\n";
+      }
+    }
+  }
+
+  # ifconfig -a
+  
+  while ( $lines[0] =~ /^[a-zA-Z0-9\-]+: flags/ ) {
+    $ex{ifconfig_a} .= (shift @lines) . "\n";
+    while ( $lines[0] =~ /^(\t|\s{3})/ ) {
+      $ex{ifconfig_a} .= (shift @lines) . "\n";
+    }
+  }
+    
+  # ifstat -a
+ 
+  shift @lines if $lines[0] =~ /^$/; # Remove a blank line
+  
+  while ( $lines[0] =~ /^-- interface/ ) {
+    $ex{ifstat_a} .= (shift @lines)."\n";
+    $ex{ifstat_a} .= (shift @lines)."\n" if $lines[0] =~ /^$/;
+    while ( $lines[0] =~ /^[A-Z_]+\w/ ) {
+      $ex{ifstat_a} .= (shift @lines)."\n";
+      while ( $lines[0] =~ /^ [A-Z]/i ) {
+        $ex{ifstat_a} .= (shift @lines)."\n";      
+      }
+    }
+    while ( $lines[0] =~ /^$/ ) { $ex{ifstat_a} .= (shift @lines)."\n"; }
+  }
+  
+  # cifs_stat
+  
+  while ( $lines[0] =~ /^\s+(\S+\s+)+\d+(\s+\d+\%)?$/ ) {
+    $ex{cifs_stat} .= (shift @lines)."\n";      
+  }
+  while ( $lines[0] =~ /^(Max|Local|RPC)/ ) {
+    $ex{cifs_stat} .= (shift @lines)."\n";      
+  }
+  
+  # Volume-language
+
+  while ( $lines[0] =~ /^\s+Volume Language$/ ) {
+    $ex{volume_language} .= (shift @lines)."\n";
+    while ( $lines[0] =~ /^(\s+)?\S+( \S+){1,2} \(.+\)$/ ) {
+      $ex{volume_language} .= (shift @lines)."\n";
+    }
+  }
+
+  # httpstat
+  
+  while ( $lines[0] =~ /^            Requests$/ ) {
+    $ex{httpstat} .= (shift @lines)."\n";
+    $ex{httpstat} .= (shift @lines) . "\n" if ( $lines[0] =~ /^\s+Accept\s+Reuse\s+Response\s+InBytes\s+OutBytes$/ );
+    $ex{httpstat} .= (shift @lines)."\n" if $lines[0] =~ /^$/;
+    while ( $lines[0] =~ /^\S+ Stats:$/ ) {
+      $ex{httpstat} .= (shift @lines)."\n";
+      while ( $lines[0] =~ /^(\s+\d+)+$/ ) {
+        $ex{httpstat} .= (shift @lines)."\n";
+        $ex{httpstat} .= (shift @lines)."\n" if $lines[0] =~ /^$/;
+      }
+    }
+  }
+
+  # df
+
+  while ( $lines[0] =~ /^Filesystem\s+kbytes/ ) {
+    $ex{df} .= (shift @lines)."\n";
+    while ( $lines[0] =~ /^(\/vol|snap reserve)/ ) {
+      $ex{df} .= (shift @lines)."\n";
+    }
+  }
+
+  # df_i
+
+  while ( $lines[0] =~ /^Filesystem\s+iused/ ) {
+    $ex{df_i} .= (shift @lines)."\n";
+    while ( $lines[0] =~ /^\/vol/ ) {
+      $ex{df_i} .= (shift @lines)."\n";
+    }
+  }
+  
+  # snap-sched
+
+  while ( $lines[0] =~ /^Volume \S+: \d+/ ) {
+    $ex{snapsched} .= (shift @lines)."\n";
+  }
+
+  # vol-status
+
+  while ( $lines[0] =~ /^\s+Volume\s+State\s+Status\s+Options/ ) {
+    $ex{vol_status} .= (shift @lines)."\n";
+    while ( $lines[0] =~ /^(\s+)?\S+\s+(online|offline|restricted)\s+\S+/ ) {
+      $ex{vol_status} .= (shift @lines)."\n";
+      while ( $lines[0] =~ /^\s{14}\s+\S+/ ) {
+        $ex{vol_status} .= (shift @lines)."\n";
+      }
+    }
+  }
+
+  # sysconfig_r
+
+  while ( $lines[0] =~ /^(Volume|Aggregate) \S+ \(.+?\) \(.+?\)$/ ) {
+    $ex{sysconfig_r} .= (shift @lines)."\n";
+    while ( $lines[0] =~ /^  Plex \S+ \(.+?\)$/ ) {
+      $ex{sysconfig_r} .= (shift @lines)."\n";
+      while ( $lines[0] =~ /^    RAID group \S+ \(.+?\)$/ ) {
+        $ex{sysconfig_r} .= (shift @lines)."\n";
+        $ex{sysconfig_r} .= (shift @lines)."\n" if $lines[0] =~ /^$/;
+        $ex{sysconfig_r} .= (shift @lines)."\n" if $lines[0] =~ /^      RAID Disk/;
+        $ex{sysconfig_r} .= (shift @lines)."\n" if $lines[0] =~ /^      ---------/;
+        while ( $lines[0] =~ /^(\s+\S+){3}(\s+\d+){2}(\s+\S+\s+(\d+|\-)){2}(\s+\d+\/\d+){2}(\s+)?$/ ) {
+          $ex{sysconfig_r} .= (shift @lines)."\n";
+        }
+        while ( $lines[0] =~ /^$/ ) {
+          $ex{sysconfig_r} .= (shift @lines)."\n";
+        }
+        while ( $lines[0] =~ /(spare|broken|partner) disks/i ) {
+          $ex{sysconfig_r} .= (shift @lines)."\n";
+          $ex{sysconfig_r} .= (shift @lines)."\n" if $lines[0] =~ /^$/;
+          $ex{sysconfig_r} .= (shift @lines)."\n" if $lines[0] =~ /^RAID Disk/;
+          $ex{sysconfig_r} .= (shift @lines)."\n" if $lines[0] =~ /^---------/;
+          while ( $lines[0] =~ /^(spare|failed|partner)/i ) {
+            $ex{sysconfig_r} .= (shift @lines)."\n";
+          }
+          $ex{sysconfig_r} .= (shift @lines)."\n" if $lines[0] =~ /^$/;
+        }
+      }
+    }
+  }
+
+  # fc stats
+
+  while ( $lines[0] =~ /^\S+ driver statistics for slot/ ) {
+    $ex{fc_stats} .= (shift @lines)."\n";
+    while ( $lines[0] =~ /^ \S+\s+\d+$/ ) {
+      $ex{fc_stats} .= (shift @lines)."\n";      
+    }
+    $ex{fc_stats} .= (shift @lines)."\n" if $lines[0] =~ /^ device status:\s+/;
+    while ( $lines[0] =~ /^  \S+\s+.*total:\s+\d+$/ ) {
+      $ex{fc_stats} .= (shift @lines)."\n";      
+    }
+  }
+  while ( $lines[0] =~ /^Cannot complete operation on channel \S+; link is DOWN/ ) {
+    $ex{fc_stats} .= (shift @lines)."\n";
+    while ( $lines[0] =~ /^$/ ) { $ex{fc_stats} .= (shift @lines)."\n" }
+  }
+  
+  # FC device map
+
+  while ( $lines[0] =~ /^Loop Map for channel/ ) {
+    $ex{fc_dev_map} .= (shift @lines)."\n";
+    while ( $lines[0] =~ /^(Translated Map|Shelf mapping|(Target SES devices|Initiators) on this loop):/ ) {
+      $ex{fc_dev_map} .= (shift @lines)."\n";
+      while ( $lines[0] =~ /^$/ ) { $ex{fc_dev_map} .= (shift @lines)."\n" }
+      while ( $lines[0] =~ /^\s+(Shelf (\d+|Unknown):\s+)?((\d+|XXX)\s+)+/ ) {
+        $ex{fc_dev_map} .= (shift @lines)."\n";
+      }
+      while ( $lines[0] =~ /^$/ ) { $ex{fc_dev_map} .= (shift @lines)."\n" }
+    }
+    while ( $lines[0] =~ /^$/ ) { $ex{fc_dev_map} .= (shift @lines)."\n" }
+    while ( $lines[0] =~ /^Cannot complete operation on channel \S+; link is DOWN/ ) {
+      $ex{fc_dev_map} .= (shift @lines)."\n";
+      while ( $lines[0] =~ /^$/ ) { $ex{fc_dev_map} .= (shift @lines)."\n" }
+    }
+  }
+
+  # FC link stats
+  
+  while ( $lines[0] =~ /Loop\s+Link\s+Transport\s+Loss of\s+Invalid\s+Frame In\s+Frame Out/ ) {
+    $ex{fc_link_stats} .= (shift @lines)."\n".(shift @lines)."\n".(shift @lines)."\n";
+    while ( $lines[0] =~ /^\w+\.\w+(\s+\d+){6}$/ ) {
+      $ex{fc_link_stats} .= (shift @lines)."\n";
+    }
+    while ( $lines[0] =~ /^$/ ) { $ex{fc_link_stats} .= (shift @lines)."\n" }
+    while ( $lines[0] =~ /^Cannot complete operation on channel \S+; link is DOWN/ ) {
+      $ex{fc_link_stats} .= (shift @lines)."\n";
+      while ( $lines[0] =~ /^$/ ) { $ex{fc_link_stats} .= (shift @lines)."\n" }
+    }
+  }
+  
+  # Registry
+  
+  while ( $lines[0] =~ /^Loaded=/ ) {
+    for ( 1 .. 15 ) { $ex{registry} .= (shift @lines)."\n"; }
+  }
+  
+  # Usage
+  
+  while ( $lines[0] =~ /^[\w\-]+(\.[\w\-]+)+=\d+$/ ) {
+    $ex{usage} .= (shift @lines)."\n";
+  }
+
+  # ACP list all
+  
+  $ex{acp_list_all} .= (shift @lines)."\n" if $lines[0] =~ /^\[acpadmin list.all\]/;
+  $ex{acp_list_all} .= (shift @lines)."\n" if length($ex{acp_list_all}) and $lines[0] =~ /^$/;
+  
+  # DNS info? - should be IP?
+
+  $ex{dns_info} .= (shift @lines)."\n" if $lines[0] =~ /^IP\s+MAC/;
+  $ex{dns_info} .= (shift @lines)."\n" if $lines[0] =~ /^Address\s+Address/;
+  $ex{dns_info} .= (shift @lines)."\n" if $lines[0] =~ /^\-+$/;
+  while ( $lines[0] =~ /^\d{1,3}(\.\d{1,3}){3}/ ) {
+    $ex{dns_info} .= (shift @lines)."\n";
+  } 
+  
+  # media_scrub
+
+  while ( $lines[0] =~ /^\S+ media_scrub: status/ ) {
+    $ex{media_scrub} .= (shift @lines)."\n";
+    while ( $lines[0] =~ /^\t\S/ ) {
+      $ex{media_scrub} .= (shift @lines)."\n";
+    }
+    $ex{media_scrub} .= (shift @lines)."\n" if $lines[0] =~ /^$/;
+  }
+  
+  # scrub
+  
+  while ( $lines[0] =~ /^\S+ scrub/ ) {
+    $ex{scrub} .= (shift @lines)."\n";
+  }
+
+  # UNKNOWN
+  
+  while ( $lines[0] =~ /^(Aggregate|Volume) \S+ \(.+?\) \(.+?\)$/ ) {
+    $ex{UNKNOWN} .= (shift @lines)."\n";
+    while ( $lines[0] =~ /^  Plex \S+ \(.+?\)$/ ) {
+      $ex{UNKNOWN} .= (shift @lines)."\n";
+      while ( $lines[0] =~ /^    RAID group \S+ \(.+?\)$/ ) {
+        $ex{UNKNOWN} .= (shift @lines)."\n";
+        $ex{UNKNOWN} .= (shift @lines)."\n" if $lines[0] =~ /^$/;
+        $ex{UNKNOWN} .= (shift @lines)."\n" if $lines[0] =~ /^      RAID Disk/;
+        $ex{UNKNOWN} .= (shift @lines)."\n" if $lines[0] =~ /^      ---------/;
+        while ( $lines[0] =~ /^      (dparity|data|parity)/ ) {
+          $ex{UNKNOWN} .= (shift @lines)."\n";
+        }
+        while ( $lines[0] =~ /^$/ ) {
+          $ex{UNKNOWN} .= (shift @lines)."\n";
+        }
+      }
+    }
+  }
+
+  # aggr_status
+  
+  while ( $lines[0] =~ /^\s+Aggr\s+State\s+Status\s+Options/ ) {
+    $ex{aggr_status} .= (shift @lines)."\n";
+    while ( $lines[0] =~ /^(\s+)?\S+\s+(online|offline|restricted)\s+\S+/ ) {
+      $ex{aggr_status} .= (shift @lines)."\n";
+      while ( $lines[0] =~ /^\s{14}\s+\S+/ ) {
+        $ex{aggr_status} .= (shift @lines)."\n";
+      }
+    }
+    $ex{aggr_status} .= (shift @lines)."\n" if $lines[0] =~ /^$/;
+    while ( $lines[0] =~ /^\s+Volumes: \S/ ) {
+      $ex{aggr_status} .= (shift @lines)."\n";
+      while ( $lines[0] =~ /^\s{8}\s+\S/ ) {
+        $ex{aggr_status} .= (shift @lines)."\n";
+      }
+      $ex{aggr_status} .= (shift @lines)."\n" if $lines[0] =~ /^$/;
+      while ( $lines[0] =~ /^\s+Plex \S+: \S/ ) {
+        $ex{aggr_status} .= (shift @lines)."\n";
+        while ( $lines[0] =~ /^\s+RAID group \S+: \S/ ) {
+          $ex{aggr_status} .= (shift @lines)."\n";
+        }
+      }
+      $ex{aggr_status} .= (shift @lines)."\n" if $lines[0] =~ /^$/;
+      while ( $lines[0] =~ /^\s*\S+\s+(online|offline|restricted)(\s+\S+){2}/ ) {
+        $ex{aggr_status} .= (shift @lines)."\n";
+        while ( $lines[0] =~ /^\s{19}\s+\S+/ ) {
+          $ex{aggr_status} .= (shift @lines)."\n";
+        }
+      }
+      $ex{aggr_status} .= (shift @lines)."\n" if $lines[0] =~ /^$/;
+    }
+  }
+
+  # xml
+
+  while (  scalar(@lines) and $lines[0] =~ /<\?xml version="1.0"\?>/ ) {
+    my $xml = (shift @lines)."\n";
+    while ( scalar(@lines) and $lines[0] !~ /<\?xml version="1.0"\?>/ ) {
+      $xml .= (shift @lines)."\n";
+    }
+    push @{$ex{xml}}, $xml;
+  }
+
+  $ex{_REMAINDER} = \@lines;
+  
+  return \%ex;
+}
+
+=head3 parse($raw)
+
+Returns an array of hash references representing key information:
+
+  ( \%header, \%luns, \%qtree, \%vols )
+
+=cut
+
+sub parse {
+	my $asup = shift @_;
+	my $extracts = ASUP::extract($asup);
+	
+	my $df           = $extracts->{df};
+	my $export       = $extracts->{export};
+	my $header       = $extracts->{header};
+	my $lun_conf     = $extracts->{lun_conf};
+	my $qtree_stat   = $extracts->{qtree_stat};
+	my $sysconfig_a  = $extracts->{sysconfig_a};
+	my $vol_status   = $extracts->{vol_status};
+	my $xheader      = $extracts->{xheader};
+
+	Interface::warning("NO DF DATA IN ASUP")     unless $df;
+	Interface::warning("NO EXPORT DATA IN ASUP") unless $export;
+	Interface::warning("NO HEADER DATA IN ASUP") unless $header;
+	# It's ok not to have LUN conf data
+	Interface::warning("NO QTREE STATUS IN ASUP")      unless $qtree_stat;
+	Interface::warning("NO SYSYCONFIG-A DATA IN ASUP") unless $sysconfig_a;
+	Interface::warning("NO VOL-STATUS DATA IN ASUP")   unless $vol_status;
+	Interface::warning("NO X-HEADER DATA IN ASUP")     unless $xheader;
+
+	# Parse header data;
+
+	my %header = Parse::NetApp::ASUP::parse_header($header);
+	Interface::message("Filer version is $header{short_version}");
+	my %xheader = Parse::NetApp::ASUP::parse_xheader($xheader);
+        for my $key ( keys %xheader ) { $header{$key} = $xheader{$key} unless defined $header{$key}; }
+
+	# Parse sysconfig data
+
+	my %sysconfig = Parse::NetApp::ASUP::parse_sysconfig($sysconfig_a);
+
+	# Add to header info, unless already there
+	for my $key ( keys %sysconfig ) {
+		if ( defined $header{$key} and $key ne 'SERIAL_NUM' ) {
+			Interface::warning("Skipping duplicate sysconfig data of type $key alread found in \%header");
+			push(@Parse::NetApp::ASUP::concerns,"Duplicate header data of type $key");
+		} elsif ( defined $header{$key} and $header{$key} ne $sysconfig{$key} ) {
+			Interface::warning("Duplicate header key of $key has varying data: [$header{$key}] vs [$sysconfig{$key}]");
+			push(@Parse::NetApp::ASUP::concerns,"Duplicate and varied header data of type $key");
+		} else {
+			$header{$key} = $sysconfig{$key};
+		}
+	}
+
+	# Parse LUN CONFiguration
+
+	my %luns = Parse::NetApp::ASUP::parse_lun($lun_conf);
+	Interface::message("No lun data found.") unless scalar( keys %luns ) or not defined $lun_conf;
+
+	# Parse DF
+
+	my %vols = Parse::NetApp::ASUP::parse_df($df);
+	Interface::warning("NO VOLUME DATA!") unless scalar( keys %vols );
+
+	# Parse qtree status data
+
+	my %qtree = Parse::NetApp::ASUP::parse_qtree($qtree_stat);
+
+	# Form a deduped list of styles of qtree on each volume for the Volume tab
+	my %dedupe;
+	for my $key ( keys %qtree ) {
+		my $vol   = $qtree{$key}{volume};
+		my $style = $qtree{$key}{style};
+		$dedupe{$vol}{$style}++;
+	}
+
+	for my $vol ( keys %dedupe ) {
+		my @qtree_styles = sort keys %{ $dedupe{$vol} };
+		$vols{$vol}{qtree} = join( ', ', @qtree_styles );
+	}
+
+	# parse Volstatus data
+
+	my %volstatus = Parse::NetApp::ASUP::parse_volstatus($vol_status);
+
+	# Add to vol info, unless already there
+	for my $volume ( keys %volstatus ) {
+		for my $key ( keys %{ $volstatus{$volume} } ) {
+
+			if ( defined $vols{$volume}{$key} ) {
+				Interface::warning("Skipping duplicate volstatus data of type $key alread found in \%vols");
+			} else {
+				$vols{$volume}{$key} = $volstatus{$volume}{$key};
+			}
+		}
+	}
+
+	# Parse Export dara
+
+	my %export = Parse::NetApp::ASUP::parse_export($export);
+
+	for my $exported ( keys %export ) {
+		for my $volume ( keys %vols ) {
+			my $test = defined $vols{$volume}{mounted_on} ? $vols{$volume}{mounted_on} : '';
+			chop $test if $test =~ /\/$/; # The export can have a closing slash
+			if ( $exported =~ /^$test$/ ) {
+				$vols{$volume}{export} = $export{$exported};
+			}
+		}
+	}
+
+	return ( \%header, \%luns, \%qtree, \%vols );
+}
+
+=head1 PARSE METHODS:
+
+Parse methods first extract the raw section and then parse them into a perl
+data structure for quick usage.
+
+=head3 parse_df()
+
+=cut
+
+sub parse_df {
+	my %vols = ();
+	return ( wantarray ? %vols : \%vols ) unless defined $_[0];
+
+	my @df = split "\n", $_[0];
+	shift @df if $df[0] =~ /^===== DF =====$/;
+	shift @df if $df[0] =~ /^Filesystem.*kbytes.*used.*avail.*capacity.*Mounted on/; # Drop the header row
+
+	while ( scalar(@df) ) {
+		my $line = shift @df;
+		$line .= shift @df if defined $df[0] and $df[0] =~ /^[\w\d\/\.]+$/;          # Wraparound on mount point
+
+		Carp::croak "BAD DF LINE: '$line'\n"
+			unless $line =~ /^([\w\d\/\.]+).+?(\d+).+?(\d+).+?(\d+).+?([-\d]+\%).+?([\w\d\/\.]+)$/;
+
+		my ( $volume, $kbytes, $used, $avail, $capacity, $mounted_on ) = ( $1, $2, $3, $4, $5, $6 );
+		next if $volume =~ /.snapshot$/;
+
+		my $volname_clean = $volume;
+		$volname_clean =~ s/^\/vol\///i;
+		$volname_clean =~ s/\/$//;
+
+		next if $volume =~ /^snap$/;
+
+		$vols{$volname_clean}{kbytes}     = $kbytes;
+		$vols{$volname_clean}{used}       = $used;
+		$vols{$volname_clean}{avail}      = $avail;
+		$vols{$volname_clean}{capacity}   = $capacity;
+		$vols{$volname_clean}{mounted_on} = $mounted_on;
+	}
+
+	return wantarray ? %vols : \%vols;
+}
+
+=head3 parse_export()
+
+=cut
+
+sub parse_export {
+	my %export = ();
+	return ( wantarray ? %export : \%export ) unless defined $_[0];
+	my @lines = split "\n", $_[0];
+	for my $line (@lines) {
+		next if $line =~ /^#/;
+		next if $line =~ /^\s*$/;
+		if ( $line =~ /^(\S+)\s+(\S+)$/ ) {
+			$export{$1} = $2;
+		}
+	}
+	return wantarray ? %export : \%export;
+}
+
+=head3 parse_header()
+
+=cut
+
+sub parse_header {
+	my %header = ();
+	return ( wantarray ? %header : \%header ) unless defined $_[0];
+
+	my @lines = split "\n", $_[0];
+	for my $line (@lines) {
+		next if $line =~ /^\s*$/;
+		if ( $line =~ /Console is using (.+)$/ ) {
+			$header{'console_charset'} = $1;
+		} elsif ( $line =~ /^(\w+)=(.*)$/ ) {
+			$header{$1} = $2;
+		} elsif ( $line =~ /Console encoding is nfs but/ ) {
+			chomp $line;
+			$header{warnings} = $line;
+		} else {
+			Carp::croak "Bad header line: [$line]";
+		}
+	}
+
+	$header{short_version} = $1 if $header{VERSION} =~ /NetApp Release ([\w\.\d]+)/;
+	$header{short_version} = $header{VERSION} unless defined $header{short_version};
+
+	return wantarray ? %header : \%header;
+}
+
+=head3 parse_lun()
+
+=cut
+
+sub parse_lun {
+	my %luns = ();
+	return ( wantarray ? %luns : \%luns ) unless length $_[0]; # Return empty if no data given
+
+	my @lun_conf = split "\n", $_[0];
+
+	shift @lun_conf while $lun_conf[0] =~ /^\s*$/;
+	shift @lun_conf if defined $lun_conf[0] and $lun_conf[0] eq '===== LUN CONFIGURATION ====='; # remove the first line
+
+	my $regex_lun_name = Parse::NetApp::ASUP::_regex_lun_name();
+
+	while ( scalar(@lun_conf) ) {
+		my $line = shift @lun_conf;
+		next if $line =~ /^\s*$/;
+		
+		Carp::croak "Bad LUN Conf Line: [$line]" unless $line =~ /^(\s{7,8}|\t)(\/.+)$/;
+
+		my $rawluninfo = $2;
+
+		$rawluninfo .= ' ' . shift @lun_conf if $lun_conf[0] =~ /^\w/; # handle possible line wrap
+		$rawluninfo =~ /^($regex_lun_name) +(.*?) +\((\d+)\).*\((.+)\)$/
+			or Carp::croak "CAN'T PARSE LUN SUMMARY LINE: [$rawluninfo]";
+
+		my $lun = $1;
+
+		$luns{$lun}{_size}     = $2;
+		$luns{$lun}{_raw_size} = $3;
+		$luns{$lun}{_status}   = $4;
+
+		$luns{$lun}{_size} =~ s/g$//;
+		$luns{$lun}{_size} = ( $1 * 1024 ) if $luns{$lun}{_size} =~ /(.*)t$/;
+
+		while ( defined $lun_conf[0] and $lun_conf[0] =~ /^(\s{15,16}|\t{2})(\w.+): (.+)$/ ) {
+			my $name = $2; my $data = $3;
+			shift @lun_conf;
+
+			$data .= ' ' . shift @lun_conf
+				if defined $lun_conf[0] and $lun_conf[0] =~ /^\w/; # handle possible line wrap
+
+			$luns{$lun}{$name} = $data;
+		}
+	}
+	return wantarray ? %luns : \%luns;
+}
+
+=head3 parse_qtree()
+
+=cut
+
+sub parse_qtree {
+	my %qtree = ();
+	return ( wantarray ? %qtree : \%qtree ) unless defined $_[0];
+
+	my @lines = split "\n", $_[0];
+	shift @lines if $lines[0] eq '===== QTREE-STATUS =====';
+
+	my $reg_path = Parse::NetApp::ASUP::_regex_path();
+	my $reg_qtree_name = Parse::NetApp::ASUP::_regex_qtree_name();
+	my $reg_vol_name = Parse::NetApp::ASUP::_regex_vol_name();
+
+	for my $line (@lines) {
+		next if $line =~ /^[\s-]*$/;                                 # Blank and line rows.
+		next if $line =~ /Volume.*Tree.*Style.*Oplocks.*Status.*ID/; # header row
+
+		my ( $vol, $tree, $style, $oplocks, $status, $id, $vfiler );
+		if ( $line =~ /^($reg_vol_name)\s+($reg_qtree_name)\s+(\w+)\s+(\w+)\s+(\w+)\s+(\d+)\s+(\w+)$/ ) { # v8 with vfiler
+			( $vol, $tree, $style, $oplocks, $status, $id, $vfiler ) = ( $1, $2, $3, $4, $5, $6, $7 );
+		} elsif ( $line =~ /^($reg_vol_name)\s+($reg_qtree_name)\s+(\w+)\s+(\w+)\s+(\d+)\s+(\w+)$/ ) {          # v8
+			( $vol, $style, $oplocks, $status, $id, $vfiler ) = ( $1, $2, $3, $4, $5, $6 );
+		} elsif ( $line =~ /^($reg_vol_name)\s+($reg_qtree_name)\s+(\w+)\s+(\w+)\s+(\w+)\s+(\d+)\s*$/ ) { # v7 and earlier
+			( $vol, $tree, $style, $oplocks, $status, $id ) = ( $1, $2, $3, $4, $5, $6 );
+		} elsif ( $line =~ /^($reg_path)\s+(\w+)\s+(\w+)\s+(\w+)\s+(\d+)\s*$/ ) {               # v7 and earlier
+			( $vol, $style, $oplocks, $status, $id ) = ( $1, $2, $3, $4, $5 );
+		} else {
+			Carp::croak "Bad Qtree Status Line: [$line]\n";
+		}
+		my $key = $vol . $id;
+
+		$qtree{$key}{volume}  = $vol;
+		$qtree{$key}{tree}    = $tree;
+		$qtree{$key}{style}   = $style;
+		$qtree{$key}{oplocks} = $oplocks;
+		$qtree{$key}{status}  = $status;
+		$qtree{$key}{id}      = $id;
+
+	}
+	return wantarray ? %qtree : \%qtree;
+}
+
+=head3 parse_sysconfig()
+
+=cut
+
+sub parse_sysconfig {
+	my %sysconfig = ();
+	return ( wantarray ? %sysconfig : \%sysconfig ) unless defined $_[0];
+
+	my @lines = split "\n", $_[0];
+	for my $line (@lines) {
+		$sysconfig{SERIAL_NUM} = $1 if $line =~ /System Serial Number: (\d+) \(/;
+	}
+
+	return wantarray ? %sysconfig : \%sysconfig;
+}
+
+=head3 parse_volstatus()
+
+=cut
+
+sub parse_volstatus {
+	my %vols = ();
+	return ( wantarray ? %vols : \%vols ) unless defined $_[0];
+
+	my @lines = split "\n", $_[0];
+	shift @lines if $lines[0] eq '===== VOL-STATUS =====';
+
+	my @chunk; my @next_chunk; my $header_count;
+
+	for my $line (@lines) {
+		next if $line =~ /^[\s-]*$/; # Blank and line rows.
+
+		if ( $line =~ /Volume.*State.*Status.*Options/ ) { # header row
+			$header_count++;
+			next;
+		}
+
+		last if $header_count > 1;
+
+		if ( scalar(@chunk) > 0 and $line =~ /^\s*([\w\-]+)\s+(online|offline)\s+(.+?)\s\s\s+(.+)$/ ) {
+			push @next_chunk, $line;
+
+			my ( $volname, $volopts ) = Parse::NetApp::ASUP::_parse_volstatus_block(@chunk);
+			$vols{$volname} = $volopts;
+
+			@chunk      = @next_chunk;
+			@next_chunk = ();
+		} else {
+			push @chunk, $line;
+		}
+	}
+
+	if (@chunk) {
+		my ( $volname, $volinfo ) = Parse::NetApp::ASUP::_parse_volstatus_block(@chunk);
+		$vols{$volname} = $volinfo;
+	}
+
+	return wantarray ? %vols : \%vols;
+}
+
+sub _parse_volstatus_block {
+	my @lines = @_;
+	my %volinfo;
+
+	my ( $volname, $volstate, $voloptions, $volstatus, $volaggr ) = ('','','','','');
+	
+	for my $line (@lines) {
+
+		# v7 unused
+		next if $line =~ /Plex \//;
+		next if $line =~ /RAID group/;
+		next if $line =~ /Snapshot autodelete settings/;
+		next if $line =~ /Volume autosize settings/;
+
+		# v8
+		next if $line =~ /Volume UUID: /;
+		next if $line =~ /Volinfo mode: /;
+		next if $line =~ /Volume has clones: /;
+		next if $line =~ /Clone, backed by volume '/;
+
+		if ( $line =~ /^\s*([\w\-]+)\s+(online|offline|restricted)\s+(.+?)\s\s\s+(.+)$/ ) {
+			$volname    = $1;
+			$volstate   = $2;
+			$volstatus  = $3;
+			$voloptions = $4;
+		} elsif ( $line =~ /^(\s{27,30}\s*|\t{5})(\S+)\s\s\s+(\S.+)$/ ) { # v7 and earlier
+			$volstatus  .= ', ' . $2;
+			$voloptions .= $3;
+		} elsif ( $line =~ /^(\s{27,30}\s*|\t{5})(.*)$/ ) { # v7 and earlier
+			$voloptions .= $2;
+		} elsif ( $line =~ /^\s*(\w+=[\w\(\)]+,?)$/ ) {  # v8
+			$voloptions .= $1;
+		} elsif ( $line =~ /^vol status: Volume '(.*?)' is temporarily busy \(snapmirror destination\)/ ) {
+			$volname = $1;
+			$volstate = 'busy';
+		} elsif ( $line =~ /Containing aggregate: ('[\w\-]+'|<N\/A>)/ ) {
+			$volaggr = $1;
+			$volaggr = $1 if $volaggr =~ /^'(.+)'$/;
+		} else {
+			Carp::croak "Bad Vol Status Line: [$line]\n";
+		}
+	}
+
+	$volinfo{state}     = $volstate;
+	$volinfo{status}    = $volstatus;
+	$volinfo{options}   = $voloptions;
+	$volinfo{aggregate} = $volaggr;
+	$volinfo{notes}     = '';
+
+        $volinfo{notes} = 'Volume is offline' if $volstate eq 'offline';
+        $volinfo{notes} = 'Volume is busy'    if $volstate eq 'busy';
+	push(@Parse::NetApp::ASUP::concerns, "$volname is marked as $volstate") if $volstate eq 'offline' or $volstate eq 'busy';
+
+	return ( $volname, \%volinfo );
+}
+
+=head3 parse_xheader()
+
+=cut
+
+sub parse_xheader {
+	my %xheader = ();
+	return ( wantarray ? %xheader : \%xheader ) unless defined $_[0];
+
+	my @lines = split "\n", $_[0];
+	shift @lines if $lines[0] eq '===== X-HEADER DATA =====';
+
+	for my $line (@lines) {
+		next if $line =~ /^\s*$/;
+		if ( $line =~ /^([\w\-]+): (.*)$/ ) {
+			$xheader{$1} = $2;
+		} else {
+			Carp::croak "Bad x-header line: [$line]";
+		}
+	}
+
+	return wantarray ? %xheader : \%xheader;
+}
 
 =head1 EXTRACT METHODS:
 
@@ -1696,956 +2542,6 @@ sub extract_xheader {
 	# give up
 	return undef;
 }
-
-### Version 8 and higher extract has to be iterative
-
-sub iterative_extract {
-  my $raw = shift @_;  
-  my %ex = ( xml => [] );
- 
-  ($ex{mailheader},$ex{header},$raw) = split /\n\n+/, $raw, 3;
-
-  # Now dealing with CRLF and the occasional standalone LF
-  
-  my @lines = Parse::NetApp::ASUP::_agnostic_line_split($raw);
-
-  # sysconfig -a
-  
-  while ( $lines[0] =~ /^(\t|\s{5})/ ) {
-    $ex{sysconfig_a} .= (shift @lines) . "\n";
-  }
-
-  # sysconfig -d 
-
-  $ex{sysconfig_d} .= (shift @lines) . "\n" if ( $lines[0] =~ /^Device/ );
-  $ex{sysconfig_d} .= (shift @lines) . "\n" if ( $lines[0] =~ /^------/ );
-  while ( $lines[0] =~ /^[0-9a-f]{2}\.[0-9a-f]{2}/ ) {
-    $ex{sysconfig_d} .= (shift @lines) . "\n";
-  }
-  
-  # sn
-
-  $ex{serialnum} = (shift @lines) . "\n" if $lines[0] =~ /^system serial number/;
-   
-  # options
-
-  while ( $lines[0] =~ /^[a-z_\-0-9]+(\.[a-z_\-0-9]+)+\s+/i ) {
-    $ex{options} .= (shift @lines) . "\n";
-  }
-
-  # service usage
-  
-  while ( $lines[0] =~ /^Service statistics as of/ ) {
-    $ex{service_usage} .= (shift @lines)."\n";
-    while ( $lines[0] =~ /^ \S+\s+\(\S+\).+recorded/ ) {
-      $ex{service_usage} .= (shift @lines)."\n";
-      while ( $lines[0] =~ /^\s+[A-Z](\s+\d+,){3}/ ) {
-        $ex{service_usage} .= (shift @lines)."\n";
-      }
-    }
-  }
-
-  # ifconfig -a
-  
-  while ( $lines[0] =~ /^[a-zA-Z0-9\-]+: flags/ ) {
-    $ex{ifconfig_a} .= (shift @lines) . "\n";
-    while ( $lines[0] =~ /^(\t|\s{3})/ ) {
-      $ex{ifconfig_a} .= (shift @lines) . "\n";
-    }
-  }
-    
-  # ifstat -a
- 
-  shift @lines if $lines[0] =~ /^$/; # Remove a blank line
-  
-  while ( $lines[0] =~ /^-- interface/ ) {
-    $ex{ifstat_a} .= (shift @lines)."\n";
-    $ex{ifstat_a} .= (shift @lines)."\n" if $lines[0] =~ /^$/;
-    while ( $lines[0] =~ /^[A-Z_]+\w/ ) {
-      $ex{ifstat_a} .= (shift @lines)."\n";
-      while ( $lines[0] =~ /^ [A-Z]/i ) {
-        $ex{ifstat_a} .= (shift @lines)."\n";      
-      }
-    }
-    while ( $lines[0] =~ /^$/ ) { $ex{ifstat_a} .= (shift @lines)."\n"; }
-  }
-  
-  # cifs_stat
-  
-  while ( $lines[0] =~ /^\s+(\S+\s+)+\d+(\s+\d+\%)?$/ ) {
-    $ex{cifs_stat} .= (shift @lines)."\n";      
-  }
-  while ( $lines[0] =~ /^(Max|Local|RPC)/ ) {
-    $ex{cifs_stat} .= (shift @lines)."\n";      
-  }
-  
-  # Volume-language
-
-  while ( $lines[0] =~ /^\s+Volume Language$/ ) {
-    $ex{volume_language} .= (shift @lines)."\n";
-    while ( $lines[0] =~ /^(\s+)?\S+( \S+){1,2} \(.+\)$/ ) {
-      $ex{volume_language} .= (shift @lines)."\n";
-    }
-  }
-
-  # httpstat
-  
-  while ( $lines[0] =~ /^            Requests$/ ) {
-    $ex{httpstat} .= (shift @lines)."\n";
-    $ex{httpstat} .= (shift @lines) . "\n" if ( $lines[0] =~ /^\s+Accept\s+Reuse\s+Response\s+InBytes\s+OutBytes$/ );
-    $ex{httpstat} .= (shift @lines)."\n" if $lines[0] =~ /^$/;
-    while ( $lines[0] =~ /^\S+ Stats:$/ ) {
-      $ex{httpstat} .= (shift @lines)."\n";
-      while ( $lines[0] =~ /^(\s+\d+)+$/ ) {
-        $ex{httpstat} .= (shift @lines)."\n";
-        $ex{httpstat} .= (shift @lines)."\n" if $lines[0] =~ /^$/;
-      }
-    }
-  }
-
-  # df
-
-  while ( $lines[0] =~ /^Filesystem\s+kbytes/ ) {
-    $ex{df} .= (shift @lines)."\n";
-    while ( $lines[0] =~ /^(\/vol|snap reserve)/ ) {
-      $ex{df} .= (shift @lines)."\n";
-    }
-  }
-
-  # df_i
-
-  while ( $lines[0] =~ /^Filesystem\s+iused/ ) {
-    $ex{df_i} .= (shift @lines)."\n";
-    while ( $lines[0] =~ /^\/vol/ ) {
-      $ex{df_i} .= (shift @lines)."\n";
-    }
-  }
-  
-  # snap-sched
-
-  while ( $lines[0] =~ /^Volume \S+: \d+/ ) {
-    $ex{snapsched} .= (shift @lines)."\n";
-  }
-
-  # vol-status
-
-  while ( $lines[0] =~ /^\s+Volume\s+State\s+Status\s+Options/ ) {
-    $ex{vol_status} .= (shift @lines)."\n";
-    while ( $lines[0] =~ /^(\s+)?\S+\s+(online|offline|restricted)\s+\S+/ ) {
-      $ex{vol_status} .= (shift @lines)."\n";
-      while ( $lines[0] =~ /^\s{14}\s+\S+/ ) {
-        $ex{vol_status} .= (shift @lines)."\n";
-      }
-    }
-  }
-
-  # sysconfig_r
-
-  while ( $lines[0] =~ /^(Volume|Aggregate) \S+ \(.+?\) \(.+?\)$/ ) {
-    $ex{sysconfig_r} .= (shift @lines)."\n";
-    while ( $lines[0] =~ /^  Plex \S+ \(.+?\)$/ ) {
-      $ex{sysconfig_r} .= (shift @lines)."\n";
-      while ( $lines[0] =~ /^    RAID group \S+ \(.+?\)$/ ) {
-        $ex{sysconfig_r} .= (shift @lines)."\n";
-        $ex{sysconfig_r} .= (shift @lines)."\n" if $lines[0] =~ /^$/;
-        $ex{sysconfig_r} .= (shift @lines)."\n" if $lines[0] =~ /^      RAID Disk/;
-        $ex{sysconfig_r} .= (shift @lines)."\n" if $lines[0] =~ /^      ---------/;
-        while ( $lines[0] =~ /^(\s+\S+){3}(\s+\d+){2}(\s+\S+\s+(\d+|\-)){2}(\s+\d+\/\d+){2}(\s+)?$/ ) {
-          $ex{sysconfig_r} .= (shift @lines)."\n";
-        }
-        while ( $lines[0] =~ /^$/ ) {
-          $ex{sysconfig_r} .= (shift @lines)."\n";
-        }
-        while ( $lines[0] =~ /(spare|broken|partner) disks/i ) {
-          $ex{sysconfig_r} .= (shift @lines)."\n";
-          $ex{sysconfig_r} .= (shift @lines)."\n" if $lines[0] =~ /^$/;
-          $ex{sysconfig_r} .= (shift @lines)."\n" if $lines[0] =~ /^RAID Disk/;
-          $ex{sysconfig_r} .= (shift @lines)."\n" if $lines[0] =~ /^---------/;
-          while ( $lines[0] =~ /^(spare|failed|partner)/i ) {
-            $ex{sysconfig_r} .= (shift @lines)."\n";
-          }
-          $ex{sysconfig_r} .= (shift @lines)."\n" if $lines[0] =~ /^$/;
-        }
-      }
-    }
-  }
-
-  # fc stats
-
-  while ( $lines[0] =~ /^\S+ driver statistics for slot/ ) {
-    $ex{fc_stats} .= (shift @lines)."\n";
-    while ( $lines[0] =~ /^ \S+\s+\d+$/ ) {
-      $ex{fc_stats} .= (shift @lines)."\n";      
-    }
-    $ex{fc_stats} .= (shift @lines)."\n" if $lines[0] =~ /^ device status:\s+/;
-    while ( $lines[0] =~ /^  \S+\s+.*total:\s+\d+$/ ) {
-      $ex{fc_stats} .= (shift @lines)."\n";      
-    }
-  }
-  while ( $lines[0] =~ /^Cannot complete operation on channel \S+; link is DOWN/ ) {
-    $ex{fc_stats} .= (shift @lines)."\n";
-    while ( $lines[0] =~ /^$/ ) { $ex{fc_stats} .= (shift @lines)."\n" }
-  }
-  
-  # FC device map
-
-  while ( $lines[0] =~ /^Loop Map for channel/ ) {
-    $ex{fc_dev_map} .= (shift @lines)."\n";
-    while ( $lines[0] =~ /^(Translated Map|Shelf mapping|(Target SES devices|Initiators) on this loop):/ ) {
-      $ex{fc_dev_map} .= (shift @lines)."\n";
-      while ( $lines[0] =~ /^$/ ) { $ex{fc_dev_map} .= (shift @lines)."\n" }
-      while ( $lines[0] =~ /^\s+(Shelf (\d+|Unknown):\s+)?((\d+|XXX)\s+)+/ ) {
-        $ex{fc_dev_map} .= (shift @lines)."\n";
-      }
-      while ( $lines[0] =~ /^$/ ) { $ex{fc_dev_map} .= (shift @lines)."\n" }
-    }
-    while ( $lines[0] =~ /^$/ ) { $ex{fc_dev_map} .= (shift @lines)."\n" }
-    while ( $lines[0] =~ /^Cannot complete operation on channel \S+; link is DOWN/ ) {
-      $ex{fc_dev_map} .= (shift @lines)."\n";
-      while ( $lines[0] =~ /^$/ ) { $ex{fc_dev_map} .= (shift @lines)."\n" }
-    }
-  }
-
-  # FC link stats
-  
-  while ( $lines[0] =~ /Loop\s+Link\s+Transport\s+Loss of\s+Invalid\s+Frame In\s+Frame Out/ ) {
-    $ex{fc_link_stats} .= (shift @lines)."\n".(shift @lines)."\n".(shift @lines)."\n";
-    while ( $lines[0] =~ /^\w+\.\w+(\s+\d+){6}$/ ) {
-      $ex{fc_link_stats} .= (shift @lines)."\n";
-    }
-    while ( $lines[0] =~ /^$/ ) { $ex{fc_link_stats} .= (shift @lines)."\n" }
-    while ( $lines[0] =~ /^Cannot complete operation on channel \S+; link is DOWN/ ) {
-      $ex{fc_link_stats} .= (shift @lines)."\n";
-      while ( $lines[0] =~ /^$/ ) { $ex{fc_link_stats} .= (shift @lines)."\n" }
-    }
-  }
-  
-  # Registry
-  
-  while ( $lines[0] =~ /^Loaded=/ ) {
-    for ( 1 .. 15 ) { $ex{registry} .= (shift @lines)."\n"; }
-  }
-  
-  # Usage
-  
-  while ( $lines[0] =~ /^[\w\-]+(\.[\w\-]+)+=\d+$/ ) {
-    $ex{usage} .= (shift @lines)."\n";
-  }
-
-  # ACP list all
-  
-  $ex{acp_list_all} .= (shift @lines)."\n" if $lines[0] =~ /^\[acpadmin list.all\]/;
-  $ex{acp_list_all} .= (shift @lines)."\n" if length($ex{acp_list_all}) and $lines[0] =~ /^$/;
-  
-  # DNS info? - should be IP?
-
-  $ex{dns_info} .= (shift @lines)."\n" if $lines[0] =~ /^IP\s+MAC/;
-  $ex{dns_info} .= (shift @lines)."\n" if $lines[0] =~ /^Address\s+Address/;
-  $ex{dns_info} .= (shift @lines)."\n" if $lines[0] =~ /^\-+$/;
-  while ( $lines[0] =~ /^\d{1,3}(\.\d{1,3}){3}/ ) {
-    $ex{dns_info} .= (shift @lines)."\n";
-  } 
-  
-  # media_scrub
-
-  while ( $lines[0] =~ /^\S+ media_scrub: status/ ) {
-    $ex{media_scrub} .= (shift @lines)."\n";
-    while ( $lines[0] =~ /^\t\S/ ) {
-      $ex{media_scrub} .= (shift @lines)."\n";
-    }
-    $ex{media_scrub} .= (shift @lines)."\n" if $lines[0] =~ /^$/;
-  }
-  
-  # scrub
-  
-  while ( $lines[0] =~ /^\S+ scrub/ ) {
-    $ex{scrub} .= (shift @lines)."\n";
-  }
-
-  # UNKNOWN
-  
-  while ( $lines[0] =~ /^(Aggregate|Volume) \S+ \(.+?\) \(.+?\)$/ ) {
-    $ex{UNKNOWN} .= (shift @lines)."\n";
-    while ( $lines[0] =~ /^  Plex \S+ \(.+?\)$/ ) {
-      $ex{UNKNOWN} .= (shift @lines)."\n";
-      while ( $lines[0] =~ /^    RAID group \S+ \(.+?\)$/ ) {
-        $ex{UNKNOWN} .= (shift @lines)."\n";
-        $ex{UNKNOWN} .= (shift @lines)."\n" if $lines[0] =~ /^$/;
-        $ex{UNKNOWN} .= (shift @lines)."\n" if $lines[0] =~ /^      RAID Disk/;
-        $ex{UNKNOWN} .= (shift @lines)."\n" if $lines[0] =~ /^      ---------/;
-        while ( $lines[0] =~ /^      (dparity|data|parity)/ ) {
-          $ex{UNKNOWN} .= (shift @lines)."\n";
-        }
-        while ( $lines[0] =~ /^$/ ) {
-          $ex{UNKNOWN} .= (shift @lines)."\n";
-        }
-      }
-    }
-  }
-
-  # aggr_status
-  
-  while ( $lines[0] =~ /^\s+Aggr\s+State\s+Status\s+Options/ ) {
-    $ex{aggr_status} .= (shift @lines)."\n";
-    while ( $lines[0] =~ /^(\s+)?\S+\s+(online|offline|restricted)\s+\S+/ ) {
-      $ex{aggr_status} .= (shift @lines)."\n";
-      while ( $lines[0] =~ /^\s{14}\s+\S+/ ) {
-        $ex{aggr_status} .= (shift @lines)."\n";
-      }
-    }
-    $ex{aggr_status} .= (shift @lines)."\n" if $lines[0] =~ /^$/;
-    while ( $lines[0] =~ /^\s+Volumes: \S/ ) {
-      $ex{aggr_status} .= (shift @lines)."\n";
-      while ( $lines[0] =~ /^\s{8}\s+\S/ ) {
-        $ex{aggr_status} .= (shift @lines)."\n";
-      }
-      $ex{aggr_status} .= (shift @lines)."\n" if $lines[0] =~ /^$/;
-      while ( $lines[0] =~ /^\s+Plex \S+: \S/ ) {
-        $ex{aggr_status} .= (shift @lines)."\n";
-        while ( $lines[0] =~ /^\s+RAID group \S+: \S/ ) {
-          $ex{aggr_status} .= (shift @lines)."\n";
-        }
-      }
-      $ex{aggr_status} .= (shift @lines)."\n" if $lines[0] =~ /^$/;
-      while ( $lines[0] =~ /^\s*\S+\s+(online|offline|restricted)(\s+\S+){2}/ ) {
-        $ex{aggr_status} .= (shift @lines)."\n";
-        while ( $lines[0] =~ /^\s{19}\s+\S+/ ) {
-          $ex{aggr_status} .= (shift @lines)."\n";
-        }
-      }
-      $ex{aggr_status} .= (shift @lines)."\n" if $lines[0] =~ /^$/;
-    }
-  }
-
-  # xml
-
-  while (  scalar(@lines) and $lines[0] =~ /<\?xml version="1.0"\?>/ ) {
-    my $xml = (shift @lines)."\n";
-    while ( scalar(@lines) and $lines[0] !~ /<\?xml version="1.0"\?>/ ) {
-      $xml .= (shift @lines)."\n";
-    }
-    push @{$ex{xml}}, $xml;
-  }
-
-  $ex{_REMAINDER} = \@lines;
-  
-  return \%ex;
-}
-
-### Parse methods
-
-sub parse_df {
-	my %vols = ();
-	return ( wantarray ? %vols : \%vols ) unless defined $_[0];
-
-	my @df = split "\n", $_[0];
-	shift @df if $df[0] =~ /^===== DF =====$/;
-	shift @df if $df[0] =~ /^Filesystem.*kbytes.*used.*avail.*capacity.*Mounted on/; # Drop the header row
-
-	while ( scalar(@df) ) {
-		my $line = shift @df;
-		$line .= shift @df if defined $df[0] and $df[0] =~ /^[\w\d\/\.]+$/;          # Wraparound on mount point
-
-		Carp::croak "BAD DF LINE: '$line'\n"
-			unless $line =~ /^([\w\d\/\.]+).+?(\d+).+?(\d+).+?(\d+).+?([-\d]+\%).+?([\w\d\/\.]+)$/;
-
-		my ( $volume, $kbytes, $used, $avail, $capacity, $mounted_on ) = ( $1, $2, $3, $4, $5, $6 );
-		next if $volume =~ /.snapshot$/;
-
-		my $volname_clean = $volume;
-		$volname_clean =~ s/^\/vol\///i;
-		$volname_clean =~ s/\/$//;
-
-		next if $volume =~ /^snap$/;
-
-		$vols{$volname_clean}{kbytes}     = $kbytes;
-		$vols{$volname_clean}{used}       = $used;
-		$vols{$volname_clean}{avail}      = $avail;
-		$vols{$volname_clean}{capacity}   = $capacity;
-		$vols{$volname_clean}{mounted_on} = $mounted_on;
-	}
-
-	return wantarray ? %vols : \%vols;
-}
-
-sub parse_export {
-	my %export = ();
-	return ( wantarray ? %export : \%export ) unless defined $_[0];
-	my @lines = split "\n", $_[0];
-	for my $line (@lines) {
-		next if $line =~ /^#/;
-		next if $line =~ /^\s*$/;
-		if ( $line =~ /^(\S+)\s+(\S+)$/ ) {
-			$export{$1} = $2;
-		}
-	}
-	return wantarray ? %export : \%export;
-}
-
-sub parse_header {
-	my %header = ();
-	return ( wantarray ? %header : \%header ) unless defined $_[0];
-
-	my @lines = split "\n", $_[0];
-	for my $line (@lines) {
-		next if $line =~ /^\s*$/;
-		if ( $line =~ /Console is using (.+)$/ ) {
-			$header{'console_charset'} = $1;
-		} elsif ( $line =~ /^(\w+)=(.*)$/ ) {
-			$header{$1} = $2;
-		} elsif ( $line =~ /Console encoding is nfs but/ ) {
-			chomp $line;
-			$header{warnings} = $line;
-		} else {
-			Carp::croak "Bad header line: [$line]";
-		}
-	}
-
-	$header{short_version} = $1 if $header{VERSION} =~ /NetApp Release ([\w\.\d]+)/;
-	$header{short_version} = $header{VERSION} unless defined $header{short_version};
-
-	return wantarray ? %header : \%header;
-}
-
-sub parse_lun {
-	my %luns = ();
-	return ( wantarray ? %luns : \%luns ) unless length $_[0]; # Return empty if no data given
-
-	my @lun_conf = split "\n", $_[0];
-
-	shift @lun_conf while $lun_conf[0] =~ /^\s*$/;
-	shift @lun_conf if defined $lun_conf[0] and $lun_conf[0] eq '===== LUN CONFIGURATION ====='; # remove the first line
-
-	my $regex_lun_name = Parse::NetApp::ASUP::_regex_lun_name();
-
-	while ( scalar(@lun_conf) ) {
-		my $line = shift @lun_conf;
-		next if $line =~ /^\s*$/;
-		
-		Carp::croak "Bad LUN Conf Line: [$line]" unless $line =~ /^(\s{7,8}|\t)(\/.+)$/;
-
-		my $rawluninfo = $2;
-
-		$rawluninfo .= ' ' . shift @lun_conf if $lun_conf[0] =~ /^\w/; # handle possible line wrap
-		$rawluninfo =~ /^($regex_lun_name) +(.*?) +\((\d+)\).*\((.+)\)$/
-			or Carp::croak "CAN'T PARSE LUN SUMMARY LINE: [$rawluninfo]";
-
-		my $lun = $1;
-
-		$luns{$lun}{_size}     = $2;
-		$luns{$lun}{_raw_size} = $3;
-		$luns{$lun}{_status}   = $4;
-
-		$luns{$lun}{_size} =~ s/g$//;
-		$luns{$lun}{_size} = ( $1 * 1024 ) if $luns{$lun}{_size} =~ /(.*)t$/;
-
-		while ( defined $lun_conf[0] and $lun_conf[0] =~ /^(\s{15,16}|\t{2})(\w.+): (.+)$/ ) {
-			my $name = $2; my $data = $3;
-			shift @lun_conf;
-
-			$data .= ' ' . shift @lun_conf
-				if defined $lun_conf[0] and $lun_conf[0] =~ /^\w/; # handle possible line wrap
-
-			$luns{$lun}{$name} = $data;
-		}
-	}
-	return wantarray ? %luns : \%luns;
-}
-
-sub parse_qtree {
-	my %qtree = ();
-	return ( wantarray ? %qtree : \%qtree ) unless defined $_[0];
-
-	my @lines = split "\n", $_[0];
-	shift @lines if $lines[0] eq '===== QTREE-STATUS =====';
-
-	my $reg_path = Parse::NetApp::ASUP::_regex_path();
-	my $reg_qtree_name = Parse::NetApp::ASUP::_regex_qtree_name();
-	my $reg_vol_name = Parse::NetApp::ASUP::_regex_vol_name();
-
-	for my $line (@lines) {
-		next if $line =~ /^[\s-]*$/;                                 # Blank and line rows.
-		next if $line =~ /Volume.*Tree.*Style.*Oplocks.*Status.*ID/; # header row
-
-		my ( $vol, $tree, $style, $oplocks, $status, $id, $vfiler );
-		if ( $line =~ /^($reg_vol_name)\s+($reg_qtree_name)\s+(\w+)\s+(\w+)\s+(\w+)\s+(\d+)\s+(\w+)$/ ) { # v8 with vfiler
-			( $vol, $tree, $style, $oplocks, $status, $id, $vfiler ) = ( $1, $2, $3, $4, $5, $6, $7 );
-		} elsif ( $line =~ /^($reg_vol_name)\s+($reg_qtree_name)\s+(\w+)\s+(\w+)\s+(\d+)\s+(\w+)$/ ) {          # v8
-			( $vol, $style, $oplocks, $status, $id, $vfiler ) = ( $1, $2, $3, $4, $5, $6 );
-		} elsif ( $line =~ /^($reg_vol_name)\s+($reg_qtree_name)\s+(\w+)\s+(\w+)\s+(\w+)\s+(\d+)\s*$/ ) { # v7 and earlier
-			( $vol, $tree, $style, $oplocks, $status, $id ) = ( $1, $2, $3, $4, $5, $6 );
-		} elsif ( $line =~ /^($reg_path)\s+(\w+)\s+(\w+)\s+(\w+)\s+(\d+)\s*$/ ) {               # v7 and earlier
-			( $vol, $style, $oplocks, $status, $id ) = ( $1, $2, $3, $4, $5 );
-		} else {
-			Carp::croak "Bad Qtree Status Line: [$line]\n";
-		}
-		my $key = $vol . $id;
-
-		$qtree{$key}{volume}  = $vol;
-		$qtree{$key}{tree}    = $tree;
-		$qtree{$key}{style}   = $style;
-		$qtree{$key}{oplocks} = $oplocks;
-		$qtree{$key}{status}  = $status;
-		$qtree{$key}{id}      = $id;
-
-	}
-	return wantarray ? %qtree : \%qtree;
-}
-
-sub parse_sysconfig {
-	my %sysconfig = ();
-	return ( wantarray ? %sysconfig : \%sysconfig ) unless defined $_[0];
-
-	my @lines = split "\n", $_[0];
-	for my $line (@lines) {
-		$sysconfig{SERIAL_NUM} = $1 if $line =~ /System Serial Number: (\d+) \(/;
-	}
-
-	return wantarray ? %sysconfig : \%sysconfig;
-}
-
-sub parse_volstatus {
-	my %vols = ();
-	return ( wantarray ? %vols : \%vols ) unless defined $_[0];
-
-	my @lines = split "\n", $_[0];
-	shift @lines if $lines[0] eq '===== VOL-STATUS =====';
-
-	my @chunk; my @next_chunk; my $header_count;
-
-	for my $line (@lines) {
-		next if $line =~ /^[\s-]*$/; # Blank and line rows.
-
-		if ( $line =~ /Volume.*State.*Status.*Options/ ) { # header row
-			$header_count++;
-			next;
-		}
-
-		last if $header_count > 1;
-
-		if ( scalar(@chunk) > 0 and $line =~ /^\s*([\w\-]+)\s+(online|offline)\s+(.+?)\s\s\s+(.+)$/ ) {
-			push @next_chunk, $line;
-
-			my ( $volname, $volopts ) = &_parse_volstatus_block(@chunk);
-			$vols{$volname} = $volopts;
-
-			@chunk      = @next_chunk;
-			@next_chunk = ();
-		} else {
-			push @chunk, $line;
-		}
-	}
-
-	if (@chunk) {
-		my ( $volname, $volinfo ) = &_parse_volstatus_block(@chunk);
-		$vols{$volname} = $volinfo;
-	}
-
-	return wantarray ? %vols : \%vols;
-}
-
-sub _parse_volstatus_block {
-	my @lines = @_;
-	my %volinfo;
-
-	my ( $volname, $volstate, $voloptions, $volstatus, $volaggr ) = ('','','','','');
-	
-	for my $line (@lines) {
-
-		# v7 unused
-		next if $line =~ /Plex \//;
-		next if $line =~ /RAID group/;
-		next if $line =~ /Snapshot autodelete settings/;
-		next if $line =~ /Volume autosize settings/;
-
-		# v8
-		next if $line =~ /Volume UUID: /;
-		next if $line =~ /Volinfo mode: /;
-		next if $line =~ /Volume has clones: /;
-		next if $line =~ /Clone, backed by volume '/;
-
-		if ( $line =~ /^\s*([\w\-]+)\s+(online|offline|restricted)\s+(.+?)\s\s\s+(.+)$/ ) {
-			$volname    = $1;
-			$volstate   = $2;
-			$volstatus  = $3;
-			$voloptions = $4;
-		} elsif ( $line =~ /^(\s{27,30}\s*|\t{5})(\S+)\s\s\s+(\S.+)$/ ) { # v7 and earlier
-			$volstatus  .= ', ' . $2;
-			$voloptions .= $3;
-		} elsif ( $line =~ /^(\s{27,30}\s*|\t{5})(.*)$/ ) { # v7 and earlier
-			$voloptions .= $2;
-		} elsif ( $line =~ /^\s*(\w+=[\w\(\)]+,?)$/ ) {  # v8
-			$voloptions .= $1;
-		} elsif ( $line =~ /^vol status: Volume '(.*?)' is temporarily busy \(snapmirror destination\)/ ) {
-			$volname = $1;
-			$volstate = 'busy';
-		} elsif ( $line =~ /Containing aggregate: ('[\w\-]+'|<N\/A>)/ ) {
-			$volaggr = $1;
-			$volaggr = $1 if $volaggr =~ /^'(.+)'$/;
-		} else {
-			Carp::croak "Bad Vol Status Line: [$line]\n";
-		}
-	}
-
-	$volinfo{state}     = $volstate;
-	$volinfo{status}    = $volstatus;
-	$volinfo{options}   = $voloptions;
-	$volinfo{aggregate} = $volaggr;
-	$volinfo{notes}     = '';
-
-        $volinfo{notes} = 'Volume is offline' if $volstate eq 'offline';
-        $volinfo{notes} = 'Volume is busy'    if $volstate eq 'busy';
-	push(@Parse::NetApp::ASUP::concerns, "$volname is marked as $volstate") if $volstate eq 'offline' or $volstate eq 'busy';
-
-	return ( $volname, \%volinfo );
-}
-
-sub parse_xheader {
-	my %xheader = ();
-	return ( wantarray ? %xheader : \%xheader ) unless defined $_[0];
-
-	my @lines = split "\n", $_[0];
-	shift @lines if $lines[0] eq '===== X-HEADER DATA =====';
-
-	for my $line (@lines) {
-		next if $line =~ /^\s*$/;
-		if ( $line =~ /^([\w\-]+): (.*)$/ ) {
-			$xheader{$1} = $2;
-		} else {
-			Carp::croak "Bad x-header line: [$line]";
-		}
-	}
-
-	return wantarray ? %xheader : \%xheader;
-}
-
-### Overall methods
-
-=head3 Parse::NetApp::ASUP::asup_version($raw)
-
-Given the entire text of an ASUP, it returns the version of the file.
-
-=cut
-
-sub asup_version {
-	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	my $version;
-	for my $line ( split '\n', $raw ) {
-		next unless $line =~ /^VERSION=NetApp Release ([\w\.\d]+)/;
-		$version = $1;
-		last;
-	}
-	return $version if defined $version;	
-	for my $line ( split '\n', $raw ) {
-		next unless $line =~ /^X-Netapp-asup-os-version: NetApp Release ([\w\.\d]+)/;
-		$version = $1;
-		last;
-	}
-	return $version ? $version : 'unknown';
-}	
-
-=head3 Parse::NetApp::ASUP::dave($raw)
-
-Given the entire text of an ASUP, it returns a "dave" version of the file.
-
-=cut
-
-sub dave {
-	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return undef unless length $raw;
-	my $dave;
-
-	$dave .= Parse::NetApp::ASUP::extract_headers($raw);
-	$dave .= Parse::NetApp::ASUP::extract_xheader($raw);
-	$dave .= Parse::NetApp::ASUP::extract_sysconfig_a($raw);
-	$dave .= Parse::NetApp::ASUP::extract_sysconfig_c($raw);
-	$dave .= Parse::NetApp::ASUP::extract_sysconfig_d($raw);
-	$dave .= Parse::NetApp::ASUP::extract_system_serial_number($raw);
-	$dave .= Parse::NetApp::ASUP::extract_software_licenses($raw);
-	$dave .= Parse::NetApp::ASUP::extract_options($raw);
-	$dave .= Parse::NetApp::ASUP::extract_service_usage($raw);
-	$dave .= Parse::NetApp::ASUP::extract_cluster_monitor($raw);
-	$dave .= Parse::NetApp::ASUP::extract_cf_monitor($raw);
-	$dave .= Parse::NetApp::ASUP::extract_interconnect_config($raw);
-	$dave .= Parse::NetApp::ASUP::extract_interconnect_stats($raw);
-	$dave .= Parse::NetApp::ASUP::extract_ifconfig_a($raw);
-	$dave .= Parse::NetApp::ASUP::extract_ifstat_a($raw);
-	$dave .= Parse::NetApp::ASUP::extract_vif_status($raw);
-	$dave .= Parse::NetApp::ASUP::extract_vlan_stat($raw);
-	$dave .= Parse::NetApp::ASUP::extract_nis_info($raw);
-	$dave .= Parse::NetApp::ASUP::extract_cifs_stat($raw);
-	$dave .= Parse::NetApp::ASUP::extract_cifs_sessions($raw);
-	$dave .= Parse::NetApp::ASUP::extract_cifs_shares($raw);
-	$dave .= Parse::NetApp::ASUP::extract_cifs_domaininfo($raw);
-	$dave .= Parse::NetApp::ASUP::extract_vol_language($raw);
-	$dave .= Parse::NetApp::ASUP::extract_httpstat($raw);
-	$dave .= Parse::NetApp::ASUP::extract_df($raw);
-	$dave .= Parse::NetApp::ASUP::extract_df_i($raw);
-	$dave .= Parse::NetApp::ASUP::extract_aggr_status($raw);
-	$dave .= Parse::NetApp::ASUP::extract_df_a($raw);
-	$dave .= Parse::NetApp::ASUP::extract_df_r($raw);
-	$dave .= Parse::NetApp::ASUP::extract_df_s($raw);
-	$dave .= Parse::NetApp::ASUP::extract_snap_sched($raw);
-	$dave .= Parse::NetApp::ASUP::extract_vol_status($raw);
-	$dave .= Parse::NetApp::ASUP::extract_sysconfig_r($raw);
-	$dave .= Parse::NetApp::ASUP::extract_unowned_disks($raw);
-	$dave .= Parse::NetApp::ASUP::extract_failed_disk_registry($raw);
-	$dave .= Parse::NetApp::ASUP::extract_fc_stats($raw);
-	$dave .= Parse::NetApp::ASUP::extract_fc_device_map($raw);
-	$dave .= Parse::NetApp::ASUP::extract_fc_link_stats($raw);
-	$dave .= Parse::NetApp::ASUP::extract_ecc_memory_scrubber_stats($raw);
-	$dave .= Parse::NetApp::ASUP::extract_usage($raw);
-	$dave .= Parse::NetApp::ASUP::extract_acp_list_all($raw);
-	$dave .= Parse::NetApp::ASUP::extract_rc($raw);
-	$dave .= Parse::NetApp::ASUP::extract_hosts($raw);
-	$dave .= Parse::NetApp::ASUP::extract_dns_info($raw);
-	$dave .= Parse::NetApp::ASUP::extract_resolv_conf($raw);
-	$dave .= Parse::NetApp::ASUP::extract_exports($raw);
-	$dave .= Parse::NetApp::ASUP::extract_environment($raw);
-	$dave .= Parse::NetApp::ASUP::extract_fcp_cfmode($raw);
-	$dave .= Parse::NetApp::ASUP::extract_fcp_initiator_status($raw);
-	$dave .= Parse::NetApp::ASUP::extract_fcp_status($raw);
-	$dave .= Parse::NetApp::ASUP::extract_fcp_target_adapters($raw);
-	$dave .= Parse::NetApp::ASUP::extract_fcp_target_configuration($raw);
-	$dave .= Parse::NetApp::ASUP::extract_fcp_target_stats($raw);
-	$dave .= Parse::NetApp::ASUP::extract_flash_card_info($raw);
-	$dave .= Parse::NetApp::ASUP::extract_fmm_data($raw);
-	$dave .= Parse::NetApp::ASUP::extract_fpolicy($raw);
-	$dave .= Parse::NetApp::ASUP::extract_hwassist_stats($raw);
-	$dave .= Parse::NetApp::ASUP::extract_ifgrp_status($raw);
-	$dave .= Parse::NetApp::ASUP::extract_initiator_groups($raw);
-	$dave .= Parse::NetApp::ASUP::extract_iscsi_alias($raw);
-	$dave .= Parse::NetApp::ASUP::extract_iscsi_connections($raw);
-	$dave .= Parse::NetApp::ASUP::extract_iscsi_initiator_status($raw);
-	$dave .= Parse::NetApp::ASUP::extract_iscsi_interface($raw);
-	$dave .= Parse::NetApp::ASUP::extract_iscsi_interface_accesslist($raw);
-	$dave .= Parse::NetApp::ASUP::extract_iscsi_isns($raw);
-	$dave .= Parse::NetApp::ASUP::extract_iscsi_nodename($raw);
-	$dave .= Parse::NetApp::ASUP::extract_iscsi_portals($raw);
-	$dave .= Parse::NetApp::ASUP::extract_iscsi_security($raw);
-	$dave .= Parse::NetApp::ASUP::extract_iscsi_sessions($raw);
-	$dave .= Parse::NetApp::ASUP::extract_iscsi_statistics($raw);
-	$dave .= Parse::NetApp::ASUP::extract_iscsi_status($raw);
-	$dave .= Parse::NetApp::ASUP::extract_iscsi_target_portal_groups($raw);
-	$dave .= Parse::NetApp::ASUP::extract_portsets($raw);
-	$dave .= Parse::NetApp::ASUP::extract_lun_config_check($raw);
-	$dave .= Parse::NetApp::ASUP::extract_lun_configuration($raw);
-	$dave .= Parse::NetApp::ASUP::extract_lun_hist($raw);
-	$dave .= Parse::NetApp::ASUP::extract_lun_statistics($raw);
-	$dave .= Parse::NetApp::ASUP::extract_nbtstat_c($raw);
-	$dave .= Parse::NetApp::ASUP::extract_netstat_s($raw);
-	$dave .= Parse::NetApp::ASUP::extract_route_gsn($raw);
-	$dave .= Parse::NetApp::ASUP::extract_nfsstat_cc($raw);
-	$dave .= Parse::NetApp::ASUP::extract_nfsstat_d($raw);
-	$dave .= Parse::NetApp::ASUP::extract_nsswitch_conf($raw);
-	$dave .= Parse::NetApp::ASUP::extract_priority_show($raw);
-	$dave .= Parse::NetApp::ASUP::extract_qtree_status($raw);
-	$dave .= Parse::NetApp::ASUP::extract_quotas($raw);
-	$dave .= Parse::NetApp::ASUP::extract_sas_adapter_state($raw);
-	$dave .= Parse::NetApp::ASUP::extract_sas_dev_stats($raw);
-	$dave .= Parse::NetApp::ASUP::extract_sas_expander_map($raw);
-	$dave .= Parse::NetApp::ASUP::extract_sas_expander_phy_state($raw);
-	$dave .= Parse::NetApp::ASUP::extract_sas_shelf($raw);
-	$dave .= Parse::NetApp::ASUP::extract_shelf_log_esh($raw);
-	$dave .= Parse::NetApp::ASUP::extract_shelf_log_iom($raw);
-	$dave .= Parse::NetApp::ASUP::extract_sis_stat($raw);
-	$dave .= Parse::NetApp::ASUP::extract_sis_stat_l($raw);
-	$dave .= Parse::NetApp::ASUP::extract_sis_status($raw);
-	$dave .= Parse::NetApp::ASUP::extract_sis_status_l($raw);
-	$dave .= Parse::NetApp::ASUP::extract_snap_list_n($raw);
-	$dave .= Parse::NetApp::ASUP::extract_snap_list_n_a($raw);
-	$dave .= Parse::NetApp::ASUP::extract_snap_reserve($raw);
-	$dave .= Parse::NetApp::ASUP::extract_snap_reserve_a($raw);
-	$dave .= Parse::NetApp::ASUP::extract_snap_sched_a($raw);
-	$dave .= Parse::NetApp::ASUP::extract_snap_status($raw);
-	$dave .= Parse::NetApp::ASUP::extract_snap_status_a($raw);
-	$dave .= Parse::NetApp::ASUP::extract_snapmirror_destinations($raw);
-	$dave .= Parse::NetApp::ASUP::extract_snapmirror_status($raw);
-	$dave .= Parse::NetApp::ASUP::extract_sm_allow($raw);
-	$dave .= Parse::NetApp::ASUP::extract_sm_conf($raw);
-	$dave .= Parse::NetApp::ASUP::extract_snapvault_destinations($raw);
-	$dave .= Parse::NetApp::ASUP::extract_snapvault_snap_sched($raw);
-	$dave .= Parse::NetApp::ASUP::extract_snapvault_status_l($raw);
-	$dave .= Parse::NetApp::ASUP::extract_snaplock($raw);
-	$dave .= Parse::NetApp::ASUP::extract_snaplock_clock($raw);
-	$dave .= Parse::NetApp::ASUP::extract_ssh($raw);
-	$dave .= Parse::NetApp::ASUP::extract_storage($raw);
-	$dave .= Parse::NetApp::ASUP::extract_sysconfig_ac($raw);
-	$dave .= Parse::NetApp::ASUP::extract_sysconfig_hardware_ids($raw);
-	$dave .= Parse::NetApp::ASUP::extract_sysconfig_m($raw);
-	$dave .= Parse::NetApp::ASUP::extract_usermap_cfg($raw);
-	$dave .= Parse::NetApp::ASUP::extract_vfiler_startup_times($raw);
-	$dave .= Parse::NetApp::ASUP::extract_vfilers($raw);
-	$dave .= Parse::NetApp::ASUP::extract_vscan($raw);
-	$dave .= Parse::NetApp::ASUP::extract_vscan_options($raw);
-	$dave .= Parse::NetApp::ASUP::extract_vscan_scanners($raw);
-	$dave .= Parse::NetApp::ASUP::extract_messages($raw);
-
-	return $dave;
-}
-
-=head3 Parse::NetApp::ASUP::extract($raw)
-
-Extract the raw sections of the data into a hash structure.
-
-=cut
-
-sub extract {
-  my $raw = shift @_;
-
-  my $version = Parse::NetApp::ASUP::asup_version($raw);  
-  $version =~ /^(\d)\.(\d)/;
-  my $maj = $1;
-  my $min = $2;
-
-  my $extracts;
-  
-  if ( $maj == 8 and $min > 0 ) {
-    my $export     = Parse::NetApp::ASUP::extract_exports($raw);
-    my $lun_conf   = Parse::NetApp::ASUP::extract_lun_configuration($raw);
-    my $qtree_stat = Parse::NetApp::ASUP::extract_qtree_status($raw);
-    my $xheader    = Parse::NetApp::ASUP::extract_xheader($raw);
-
-    $extracts = ASUP::iterative_extract($raw);
-    $extracts->{_METHOD} = 'Progressive';
-    
-    $extracts->{export}     = $export;
-    $extracts->{lun_conf}   = $lun_conf;
-    $extracts->{qtree_stat} = $qtree_stat;    
-    $extracts->{xheader}    = $xheader;
-  } else {
-    $extracts->{_METHOD} = 'Singular';
-    $extracts->{xml} = [];
-
-    $extracts->{df}           = Parse::NetApp::ASUP::extract_df($raw);
-    $extracts->{export}       = Parse::NetApp::ASUP::extract_exports($raw);
-    $extracts->{header}       = Parse::NetApp::ASUP::extract_headers($raw);
-    $extracts->{lun_conf}     = Parse::NetApp::ASUP::extract_lun_configuration($raw);
-    $extracts->{qtree_stat}   = Parse::NetApp::ASUP::extract_qtree_status($raw);
-    $extracts->{sysconfig_a}  = Parse::NetApp::ASUP::extract_sysconfig_a($raw);
-    $extracts->{vol_status}   = Parse::NetApp::ASUP::extract_vol_status($raw);
-    $extracts->{xheader}      = Parse::NetApp::ASUP::extract_xheader($raw);
-  }
-
-  $extracts->{_VERSION} = $version;        
-  return $extracts;
-}
-
-=head3 Parse::NetApp::Parse::NetApp::ASUP::parse($raw)
-
-Given the entire text of an ASUP, it returns an array of hash references
-that are used in the LOE generator:
-
-  ( \%header, \%luns, \%qtree, \%vols )
-
-=cut
-
-sub parse {
-	my $asup = shift @_;
-	my $extracts = ASUP::extract($asup);
-	
-	my $df           = $extracts->{df};
-	my $export       = $extracts->{export};
-	my $header       = $extracts->{header};
-	my $lun_conf     = $extracts->{lun_conf};
-	my $qtree_stat   = $extracts->{qtree_stat};
-	my $sysconfig_a  = $extracts->{sysconfig_a};
-	my $vol_status   = $extracts->{vol_status};
-	my $xheader      = $extracts->{xheader};
-
-	Interface::warning("NO DF DATA IN ASUP")     unless $df;
-	Interface::warning("NO EXPORT DATA IN ASUP") unless $export;
-	Interface::warning("NO HEADER DATA IN ASUP") unless $header;
-	# It's ok not to have LUN conf data
-	Interface::warning("NO QTREE STATUS IN ASUP")      unless $qtree_stat;
-	Interface::warning("NO SYSYCONFIG-A DATA IN ASUP") unless $sysconfig_a;
-	Interface::warning("NO VOL-STATUS DATA IN ASUP")   unless $vol_status;
-	Interface::warning("NO X-HEADER DATA IN ASUP")     unless $xheader;
-
-	# Parse header data;
-
-	my %header = Parse::NetApp::ASUP::parse_header($header);
-	Interface::message("Filer version is $header{short_version}");
-	my %xheader = Parse::NetApp::ASUP::parse_xheader($xheader);
-        for my $key ( keys %xheader ) { $header{$key} = $xheader{$key} unless defined $header{$key}; }
-
-	# Parse sysconfig data
-
-	my %sysconfig = Parse::NetApp::ASUP::parse_sysconfig($sysconfig_a);
-
-	# Add to header info, unless already there
-	for my $key ( keys %sysconfig ) {
-		if ( defined $header{$key} and $key ne 'SERIAL_NUM' ) {
-			Interface::warning("Skipping duplicate sysconfig data of type $key alread found in \%header");
-			push(@Parse::NetApp::ASUP::concerns,"Duplicate header data of type $key");
-		} elsif ( defined $header{$key} and $header{$key} ne $sysconfig{$key} ) {
-			Interface::warning("Duplicate header key of $key has varying data: [$header{$key}] vs [$sysconfig{$key}]");
-			push(@Parse::NetApp::ASUP::concerns,"Duplicate and varied header data of type $key");
-		} else {
-			$header{$key} = $sysconfig{$key};
-		}
-	}
-
-	# Parse LUN CONFiguration
-
-	my %luns = Parse::NetApp::ASUP::parse_lun($lun_conf);
-	Interface::message("No lun data found.") unless scalar( keys %luns ) or not defined $lun_conf;
-
-	# Parse DF
-
-	my %vols = Parse::NetApp::ASUP::parse_df($df);
-	Interface::warning("NO VOLUME DATA!") unless scalar( keys %vols );
-
-	# Parse qtree status data
-
-	my %qtree = Parse::NetApp::ASUP::parse_qtree($qtree_stat);
-
-	# Form a deduped list of styles of qtree on each volume for the Volume tab
-	my %dedupe;
-	for my $key ( keys %qtree ) {
-		my $vol   = $qtree{$key}{volume};
-		my $style = $qtree{$key}{style};
-		$dedupe{$vol}{$style}++;
-	}
-
-	for my $vol ( keys %dedupe ) {
-		my @qtree_styles = sort keys %{ $dedupe{$vol} };
-		$vols{$vol}{qtree} = join( ', ', @qtree_styles );
-	}
-
-	# parse Volstatus data
-
-	my %volstatus = Parse::NetApp::ASUP::parse_volstatus($vol_status);
-
-	# Add to vol info, unless already there
-	for my $volume ( keys %volstatus ) {
-		for my $key ( keys %{ $volstatus{$volume} } ) {
-
-			if ( defined $vols{$volume}{$key} ) {
-				Interface::warning("Skipping duplicate volstatus data of type $key alread found in \%vols");
-			} else {
-				$vols{$volume}{$key} = $volstatus{$volume}{$key};
-			}
-		}
-	}
-
-	# Parse Export dara
-
-	my %export = Parse::NetApp::ASUP::parse_export($export);
-
-	for my $exported ( keys %export ) {
-		for my $volume ( keys %vols ) {
-			my $test = defined $vols{$volume}{mounted_on} ? $vols{$volume}{mounted_on} : '';
-			chop $test if $test =~ /\/$/; # The export can have a closing slash
-			if ( $exported =~ /^$test$/ ) {
-				$vols{$volume}{export} = $export{$exported};
-			}
-		}
-	}
-
-	return ( \%header, \%luns, \%qtree, \%vols );
-}
-
 
 1;
 
