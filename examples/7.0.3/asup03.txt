@@ -1,24 +1,24 @@
-From cml_netapp@cypress.com Sat Jun 23 09:44:32 2012 (2567537)
+From cml_netapp@example.org Sat Jun 23 09:44:32 2012 (2567537)
 Received: from ngzspdapp03-prd.corp.netapp.com (ngzspdapp03-prd.corp.netapp.com [10.57.55.73])
 	by ngzspdapp01-prd.corp.netapp.com (8.13.7/8.13.7/NTAP-1.5) with ESMTP id q5NGiVJv000725
 	for <asupprod@asupmail2.corp.netapp.com>; Sat, 23 Jun 2012 09:44:31 -0700 (PDT)
 Received: from mx11.netapp.com (mx11.dmz.netapp.com [10.254.64.49])
 	by ngzspdapp03-prd.corp.netapp.com (8.13.7/8.13.7/NTAP-1.5) with ESMTP id q5NGiH0J009518
 	for <autosupport@asupmail.netapp.com>; Sat, 23 Jun 2012 09:44:31 -0700 (PDT)
-Received: from smtp1.cypress.com ([157.95.67.100])
+Received: from smtp1.example.org ([157.95.67.100])
   by mx11.netapp.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 23 Jun 2012 09:44:30 -0700
-Received: from corpmail.cypress.com (corpmail.cypress.com [157.95.1.2])
-	by smtp1.cypress.com (8.13.8/8.13.8) with ESMTP id q5NGiTAA009582
+Received: from corpmail.example.org (corpmail.example.org [157.95.1.2])
+	by smtp1.example.org (8.13.8/8.13.8) with ESMTP id q5NGiTAA009582
 	for <autosupport@netapp.com>; Sat, 23 Jun 2012 09:44:29 -0700
-Received: from cobweb.mis.cypress.com (cobweb.mis.cypress.com [172.16.2.5])
-	by corpmail.cypress.com (8.12.10/8.12.10) with ESMTP id q5NGiBtS005671;
+Received: from cobweb.mis.example.org (cobweb.mis.example.org [172.16.2.5])
+	by corpmail.example.org (8.12.10/8.12.10) with ESMTP id q5NGiBtS005671;
 	Sat, 23 Jun 2012 09:44:11 -0700 (PDT)
 Received: from grin-netapp (grin-netapp [157.95.96.99])
-	by cobweb.mis.cypress.com (8.12.11/8.12.11) with SMTP id q5NGhFrT001649;
+	by cobweb.mis.example.org (8.12.11/8.12.11) with SMTP id q5NGhFrT001649;
 	Sat, 23 Jun 2012 09:43:15 -0700 (PDT)
-Message-Id: <201206231643.q5NGhFrT001649@cobweb.mis.cypress.com>
-From: cml_netapp@cypress.com
-To: cml_netapp@cypress.com, autosupport@netapp.com
+Message-Id: <201206231643.q5NGhFrT001649@cobweb.mis.example.org>
+From: cml_netapp@example.org
+To: cml_netapp@example.org, autosupport@netapp.com
 Date: Sun, 24 Jun 2012 00:43:16 +0800
 Subject: Cluster Notification from grin-netapp (WEEKLY_LOG) INFO
 Mime-Version: 1.0
@@ -35,7 +35,7 @@ X-Netapp-asup-partner-serial-num: 0101170653
 X-Netapp-asup-model-name: FAS3020
 X-Netapp-asup-conf-version: 7.0.0
 X-Netapp-asup-conf-checksum: jGwimgg8oqBdK/sjAkfFBg==
-X-Netapp-asup-from: cml_netapp@cypress.com
+X-Netapp-asup-from: cml_netapp@example.org
 
 GENERATED_ON=Sun Jun 24 00:00:00 PHT 2012
 VERSION=NetApp Release 7.0.3: Fri Dec  2 06:00:21 PST 2005
@@ -331,9 +331,9 @@ autosupport.content          complete
 autosupport.dafs.verbose     off        
 autosupport.doit             WEEKLY_LOG 
 autosupport.enable           on         
-autosupport.from             cml_netapp@cypress.com 
+autosupport.from             cml_netapp@example.org 
 autosupport.local.nht_data.enable off        
-autosupport.mailhost         mailhost.mis.cypress.com 
+autosupport.mailhost         mailhost.mis.example.org 
 autosupport.minimal.subject.id hostname   
 autosupport.nht_data.enable  on         
 autosupport.noteto                      
@@ -345,7 +345,7 @@ autosupport.support.to       autosupport@netapp.com
 autosupport.support.transport smtp       
 autosupport.support.url      support.netapp.com/asupprod/post/1.0/postAsup 
 autosupport.throttle         on         
-autosupport.to               cml_netapp@cypress.com 
+autosupport.to               cml_netapp@example.org 
 backup.log.enable            on         
 cf.giveback.auto.cifs.terminate.minutes 5          
 cf.giveback.auto.enable      off        
@@ -426,7 +426,7 @@ dafs.num_requestd            2          (value might be overwritten in takeover)
 dafs.percent_memory          10         (value might be overwritten in takeover)
 dafs.session_reuse_threshold 600        (value might be overwritten in takeover)
 dns.cache.enable             on         (value might be overwritten in takeover)
-dns.domainname               cspi.cypress.com (value might be overwritten in takeover)
+dns.domainname               cspi.example.org (value might be overwritten in takeover)
 dns.enable                   on         (value might be overwritten in takeover)
 fcp.enable                   off        
 flexcache.access             none       
@@ -543,13 +543,13 @@ nfs.v2.df_2gb_lim            off
 nfs.v3.enable                on         
 nfs.v4.acl.enable            off        
 nfs.v4.enable                off        
-nfs.v4.id.domain             mis.cypress.com 
+nfs.v4.id.domain             mis.example.org 
 nfs.v4.read_delegation       off        
 nfs.v4.write_delegation      off        
 nfs.webnfs.enable            off        
 nfs.webnfs.rootdir           XXX        
 nfs.webnfs.rootdir.set       off        
-nis.domainname               cspi.cypress.com (value might be overwritten in takeover)
+nis.domainname               cspi.example.org (value might be overwritten in takeover)
 nis.enable                   on         (value might be overwritten in takeover)
 nis.group_update.enable      off        (value might be overwritten in takeover)
 nis.group_update_schedule    24         (value might be overwritten in takeover)
@@ -623,7 +623,7 @@ timed.max_skew               30m        (same value in local+partner recommended
 timed.min_skew               10         (same value in local+partner recommended)
 timed.proto                  ntp        (same value in local+partner recommended)
 timed.sched                  1h         (same value in local+partner recommended)
-timed.servers                clock1.cypress.com,clock2.cypress.com,clock3.cypress.com (same value in local+partner recommended)
+timed.servers                clock1.example.org,clock2.example.org,clock3.example.org (same value in local+partner recommended)
 timed.window                 0s         (same value in local+partner recommended)
 trusted.hosts                *          (same value required in local+partner)
 vol.copy.throttle            10         (value might be overwritten in takeover)
@@ -894,7 +894,7 @@ vif: 3 links, transmit 'IP Load balancing', VIF Type 'multi_mode' fail 'default'
 
 ===== NIS info =====
 
-  NIS domain is cspi.cypress.com 
+  NIS domain is cspi.example.org 
 
   NIS group cache has been disabled 
 
@@ -2311,8 +2311,8 @@ IP Address       State   Last Polled                  Avg RTT Calls  Errs
 172.23.17.52     UP      Mon Apr 16 20:59:56 PHT 2012      19   324    72
 172.23.17.37     UP      Sat Oct  1 11:57:02 PHT 2011    2560    75    72
 
-Default domain: cspi.cypress.com
-Search domains: cspi.cypress.com cypress.com 
+Default domain: cspi.example.org
+Search domains: cspi.example.org example.org 
 
 
 ===== ENVIRONMENT =====
@@ -4654,7 +4654,7 @@ X-Netapp-asup-partner-serial-num: 0101170653
 X-Netapp-asup-model-name: FAS3020
 X-Netapp-asup-conf-version: 7.0.0
 X-Netapp-asup-conf-checksum: jGwimgg8oqBdK/sjAkfFBg==
-X-Netapp-asup-from: cml_netapp@cypress.com
+X-Netapp-asup-from: cml_netapp@example.org
 
 ===== MESSAGES =====
 Sun Jun 17 00:00:00 PHT [grin-netapp: kern.log.rotate:notice]: System grin-netapp (ID 0101173646) is running NetApp Release 7.0.3
@@ -16875,9 +16875,9 @@ vif create multi vif -b ip e0a e0b e0c
 ifconfig vif `hostname`-vif mediatype auto netmask 255.255.255.0 partner vif
 route add default 157.95.96.240 1
 routed on
-options dns.domainname cspi.cypress.com
+options dns.domainname cspi.example.org
 options dns.enable on
-options nis.domainname cspi.cypress.com
+options nis.domainname cspi.example.org
 options nis.enable on
 savecore
 #Auto-generated by setup Mon Oct  8 19:50:47 PHT 2007

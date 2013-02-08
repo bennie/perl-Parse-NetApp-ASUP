@@ -340,8 +340,8 @@ md5_hex($extract_nsswitch_conf) eq 'cc1085e9894b811ada8f06cfbc14d460' ? ok(193) 
 substr($extract_nsswitch_conf,0,20) eq '===== NSSWITCH-CONF ' ? ok(194) : nok(194);
 
 my $extract_options = $pna->extract_options();
-length($extract_options) eq '15760' ? ok(195) : nok(195);
-md5_hex($extract_options) eq 'f8393dd197d6aab3b083fa514ea4d9c2' ? ok(196) : nok(196);
+length($extract_options) eq '15757' ? ok(195) : nok(195);
+md5_hex($extract_options) eq 'ee9764386f737e3a5734e2816e6f91cd' ? ok(196) : nok(196);
 substr($extract_options,0,20) eq '===== OPTIONS =====
 ' ? ok(197) : nok(197);
 
@@ -647,8 +647,8 @@ md5_hex($extract_vscan_scanners) eq '9794c533b37cc0ee4fbce706067161ab' ? ok(373)
 substr($extract_vscan_scanners,0,20) eq '===== VSCAN SCANNERS' ? ok(374) : nok(374);
 
 my $extract_xheader = $pna->extract_xheader();
-length($extract_xheader) eq '615' ? ok(375) : nok(375);
-md5_hex($extract_xheader) eq '80447e059959bf19df5a8af135057be1' ? ok(376) : nok(376);
+length($extract_xheader) eq '612' ? ok(375) : nok(375);
+md5_hex($extract_xheader) eq '98a06bd5360738ca41ff262cd718f1ee' ? ok(376) : nok(376);
 substr($extract_xheader,0,20) eq '===== X-HEADER DATA ' ? ok(377) : nok(377);
 
 BEGIN { plan tests => 377 };

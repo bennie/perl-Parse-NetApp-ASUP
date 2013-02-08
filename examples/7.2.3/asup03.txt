@@ -975,10 +975,10 @@ autosupport.cifs.verbose     off
 autosupport.content          complete
 autosupport.doit             USER_TRIGGERED (test_pkelly)
 autosupport.enable           on
-autosupport.from             SJH002060-stmgr01@svhemgprovip.sjhs.com
+autosupport.from             SJH002060-stmgr01@svhemgprovip.example.org
 autosupport.local.nht_data.enable off
 autosupport.local.performance_data.enable off
-autosupport.mailhost         mail.sjhs.com
+autosupport.mailhost         mail.example.org
 autosupport.minimal.subject.id hostname
 autosupport.nht_data.enable  on
 autosupport.noteto
@@ -1076,7 +1076,7 @@ disk.maint_center.spares_check on
 disk.recovery_needed.count   5
 disk.shm.enable              on
 dns.cache.enable             on
-dns.domainname               sjhs.com
+dns.domainname               example.org
 dns.enable                   on
 dns.update.enable            off
 dns.update.ttl               24h
@@ -2251,8 +2251,8 @@ IP Address                                     State   Last Polled              
 10.12.120.60                                   UP      Thu Apr 26 13:58:51 EDT 2012       0 44865   120
 10.12.120.61                                   DOWN    Mon Apr 16 22:27:33 EDT 2012    5000   120   120
 
-Default domain: sjhs.com
-Search domains: sjhs.com
+Default domain: example.org
+Search domains: example.org
 
 
 ===== NETSTAT-S =====
@@ -4994,7 +4994,7 @@ X-Netapp-asup-partner-serial-num: <unknown>
 X-Netapp-asup-model-name: FAS940
 X-Netapp-asup-conf-version: 7.0.0
 X-Netapp-asup-conf-checksum: SgPfttk5LhzvthjwOzmDjg==
-X-Netapp-asup-from: SJH002060-stmgr01@svhemgprovip.sjhs.com
+X-Netapp-asup-from: SJH002060-stmgr01@svhemgprovip.example.org
 
 ===== EMS EVENT =====
 Current time: 26Apr2012 14:01:45

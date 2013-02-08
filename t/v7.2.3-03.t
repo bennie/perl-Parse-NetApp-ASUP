@@ -82,8 +82,8 @@ md5_hex($extract_df_s) eq 'd41d8cd98f00b204e9800998ecf8427e' ? ok(40) : nok(40);
 substr($extract_df_s,0,20) eq '' ? ok(41) : nok(41);
 
 my $extract_dns_info = $pna->extract_dns_info();
-length($extract_dns_info) eq '624' ? ok(42) : nok(42);
-md5_hex($extract_dns_info) eq '83f74fda9b0e20e0c86744b5b8bb4239' ? ok(43) : nok(43);
+length($extract_dns_info) eq '630' ? ok(42) : nok(42);
+md5_hex($extract_dns_info) eq 'b427e72bd19f3acd5579f4a1f6febf7b' ? ok(43) : nok(43);
 substr($extract_dns_info,0,20) eq '===== DNS info =====' ? ok(44) : nok(44);
 
 my $extract_ecc_memory_scrubber_stats = $pna->extract_ecc_memory_scrubber_stats();
@@ -338,8 +338,8 @@ md5_hex($extract_nsswitch_conf) eq 'd41d8cd98f00b204e9800998ecf8427e' ? ok(193) 
 substr($extract_nsswitch_conf,0,20) eq '' ? ok(194) : nok(194);
 
 my $extract_options = $pna->extract_options();
-length($extract_options) eq '12642' ? ok(195) : nok(195);
-md5_hex($extract_options) eq 'f58994207e49107a88b4b83f19798c2c' ? ok(196) : nok(196);
+length($extract_options) eq '12651' ? ok(195) : nok(195);
+md5_hex($extract_options) eq '28b5962e5ccbcecd5e3ecbf600ae6fd1' ? ok(196) : nok(196);
 substr($extract_options,0,20) eq '===== OPTIONS =====
 ' ? ok(197) : nok(197);
 
@@ -644,8 +644,8 @@ md5_hex($extract_vscan_scanners) eq '9794c533b37cc0ee4fbce706067161ab' ? ok(373)
 substr($extract_vscan_scanners,0,20) eq '===== VSCAN SCANNERS' ? ok(374) : nok(374);
 
 my $extract_xheader = $pna->extract_xheader();
-length($extract_xheader) eq '637' ? ok(375) : nok(375);
-md5_hex($extract_xheader) eq '7c8b7bf59b1f1e73821539b3c0920223' ? ok(376) : nok(376);
+length($extract_xheader) eq '640' ? ok(375) : nok(375);
+md5_hex($extract_xheader) eq 'a300951b889717e65d1e1a66fd2d385d' ? ok(376) : nok(376);
 substr($extract_xheader,0,20) eq '===== X-HEADER DATA ' ? ok(377) : nok(377);
 
 BEGIN { plan tests => 377 };

@@ -13,7 +13,7 @@ X-Netapp-asup-partner-serial-num: <unknown>
 X-Netapp-asup-model-name: FAS3020
 X-Netapp-asup-conf-version: 7.0.0
 X-Netapp-asup-conf-checksum: SgPfttk5LhzvthjwOzmDjg==
-X-Netapp-asup-from: PRV001001-stmgr01@mob1.providence.com
+X-Netapp-asup-from: PRV001001-stmgr01@mob1.example.org
 Subject: System Notification from stmgr01 (WEEKLY_LOG) INFO
 Mime-Version: 1.0 (865)
 X-Mailer: Ontap
@@ -232,7 +232,7 @@ autosupport.cifs.verbose     off
 autosupport.content          complete   
 autosupport.doit             WEEKLY_LOG 
 autosupport.enable           on         
-autosupport.from             PRV001001-stmgr01@mob1.providence.com 
+autosupport.from             PRV001001-stmgr01@mob1.example.org 
 autosupport.local.nht_data.enable off        
 autosupport.local.performance_data.enable off        
 autosupport.mailhost         list.ascensionhealth.org 
@@ -15297,7 +15297,7 @@ FAS3020 7 1 0x1275 0x0005 0
 !DS14-Mk2-FC-LRC!IMS65228001684F!N/A!!
 
 ===== SYSLOG-CONF =====
-# $Id: asup02.txt,v 1.1 2013/02/01 21:56:31 cvs Exp $
+# $Id: asup02.txt,v 1.2 2013/02/08 00:41:53 cvs Exp $
 # Copyright (c) 1994-1996 Network Appliance.
 # All rights reserved.
 # Sample syslog.conf file.  Copy to /etc/syslog.conf to use.
@@ -15374,7 +15374,7 @@ X-Netapp-asup-partner-serial-num: <unknown>
 X-Netapp-asup-model-name: FAS3020
 X-Netapp-asup-conf-version: 7.0.0
 X-Netapp-asup-conf-checksum: SgPfttk5LhzvthjwOzmDjg==
-X-Netapp-asup-from: PRV001001-stmgr01@mob1.providence.com
+X-Netapp-asup-from: PRV001001-stmgr01@mob1.example.org
 
 ===== MESSAGES =====
 Sun Mar 11 00:00:01 CST [kern.log.rotate:notice]: System stmgr01 (ID 0101177530) is running NetApp Release 7.2.3
