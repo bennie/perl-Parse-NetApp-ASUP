@@ -94,7 +94,7 @@ substr($extract_environment,0,20) eq '' ? ok(50) : nok(50);
 
 my $extract_exports = $pna->extract_exports();
 length($extract_exports) eq '1996' ? ok(51) : nok(51);
-md5_hex($extract_exports) eq 'b609c1561acdb7a616f99d19ef6daf8c' ? ok(52) : nok(52);
+md5_hex($extract_exports) eq '0299d5039fea25fbd35cb1d0b322048f' ? ok(52) : nok(52);
 substr($extract_exports,0,20) eq '/vol/images2_2010	-s' ? ok(53) : nok(53);
 
 my $extract_failed_disk_registry = $pna->extract_failed_disk_registry();

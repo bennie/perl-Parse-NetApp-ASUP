@@ -1,24 +1,24 @@
-From netapp@cypress.com Sat Mar 17 23:58:16 2012 (278451)
+From netapp@example.org Sat Mar 17 23:58:16 2012 (278451)
 Received: from spider5.corp.netapp.com (spider5.corp.netapp.com [10.57.153.104])
 	by spider6.corp.netapp.com (8.13.7/8.13.7/NTAP-1.5) with ESMTP id q2I6wFeu016450
 	for <asupprod@asupmail2.corp.netapp.com>; Sat, 17 Mar 2012 23:58:16 -0700 (PDT)
 Received: from mx12.netapp.com (mx12.dmz.netapp.com [10.254.64.52])
 	by spider5.corp.netapp.com (8.13.7/8.13.7/NTAP-1.5) with ESMTP id q2I6vkd8016938
 	for <autosupport@asupmail.netapp.com>; Sat, 17 Mar 2012 23:58:15 -0700 (PDT)
-Received: from smtp1.cypress.com ([157.95.67.100])
+Received: from smtp1.example.org ([157.95.67.100])
   by mx12.netapp.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 17 Mar 2012 23:58:15 -0700
-Received: from corpmail.cypress.com (corpmail.cypress.com [157.95.1.2])
-	by smtp1.cypress.com (8.13.8/8.13.8) with ESMTP id q2I6w6ip028706;
+Received: from corpmail.example.org (corpmail.example.org [157.95.1.2])
+	by smtp1.example.org (8.13.8/8.13.8) with ESMTP id q2I6w6ip028706;
 	Sat, 17 Mar 2012 23:58:06 -0700
-Received: from cobweb.mis.cypress.com (cobweb.mis.cypress.com [172.16.2.5])
-	by corpmail.cypress.com (8.12.10/8.12.10) with ESMTP id q2I6w08x029556;
+Received: from cobweb.mis.example.org (cobweb.mis.example.org [172.16.2.5])
+	by corpmail.example.org (8.12.10/8.12.10) with ESMTP id q2I6w08x029556;
 	Sat, 17 Mar 2012 23:58:00 -0700 (PDT)
 Received: from oren-netapp (oren-netapp [172.16.2.8])
-	by cobweb.mis.cypress.com (8.12.11/8.12.11) with SMTP id q2I6vxti004085;
+	by cobweb.mis.example.org (8.12.11/8.12.11) with SMTP id q2I6vxti004085;
 	Sat, 17 Mar 2012 23:57:59 -0700 (PDT)
-Message-Id: <201203180657.q2I6vxti004085@cobweb.mis.cypress.com>
-From: netapp@cypress.com
-To: netapp@cypress.com, autosupport@netapp.com
+Message-Id: <201203180657.q2I6vxti004085@cobweb.mis.example.org>
+From: netapp@example.org
+To: netapp@example.org, autosupport@netapp.com
 Date: Sun, 18 Mar 2012 00:13:05 -0700
 Subject: Cluster Notification from oren-netapp (WEEKLY_LOG) INFO
 Mime-Version: 1.0
@@ -35,10 +35,10 @@ X-Netapp-asup-partner-serial-num: 0101179385
 X-Netapp-asup-model-name: FAS3020
 X-Netapp-asup-conf-version: 7.0.0
 X-Netapp-asup-conf-checksum: jGwimgg8oqBdK/sjAkfFBg==
-X-Netapp-asup-from: netapp@cypress.com
+X-Netapp-asup-from: netapp@example.org
 X-Cypress-MailScanner-Information: Please contact the ISP for more information
 X-Cypress-MailScanner-ID: q2I6w6ip028706
-X-Cypress-MailScanner-From: netapp@cypress.com
+X-Cypress-MailScanner-From: netapp@example.org
 X-Spam-Status: No
 
 GENERATED_ON=Sun Mar 18 00:00:00 PDT 2012
@@ -288,21 +288,21 @@ autosupport.content          complete
 autosupport.dafs.verbose     off        
 autosupport.doit             WEEKLY_LOG 
 autosupport.enable           on         
-autosupport.from             netapp@cypress.com 
+autosupport.from             netapp@example.org 
 autosupport.local.nht_data.enable off        
-autosupport.mailhost         mailhost.mis.cypress.com 
+autosupport.mailhost         mailhost.mis.example.org 
 autosupport.minimal.subject.id hostname   
 autosupport.nht_data.enable  on         
-autosupport.noteto           mis_sys@cypress.com,netapp@cypress.com 
+autosupport.noteto           mis_sys@example.org,netapp@example.org 
 autosupport.retry.count      15         (value might be overwritten in takeover)
 autosupport.retry.interval   4m         (value might be overwritten in takeover)
 autosupport.support.enable   on         
-autosupport.support.proxy    rootproxy.cypress.com:8080 
+autosupport.support.proxy    rootproxy.example.org:8080 
 autosupport.support.to       autosupport@netapp.com 
 autosupport.support.transport smtp       
 autosupport.support.url      support.netapp.com/asupprod/post/1.0/postAsup 
 autosupport.throttle         on         
-autosupport.to               netapp@cypress.com 
+autosupport.to               netapp@example.org 
 backup.log.enable            on         
 cf.giveback.auto.cifs.terminate.minutes 5          
 cf.giveback.auto.enable      off        
@@ -383,7 +383,7 @@ dafs.num_requestd            2          (value might be overwritten in takeover)
 dafs.percent_memory          10         (value might be overwritten in takeover)
 dafs.session_reuse_threshold 600        (value might be overwritten in takeover)
 dns.cache.enable             on         (value might be overwritten in takeover)
-dns.domainname               mis.cypress.com (value might be overwritten in takeover)
+dns.domainname               mis.example.org (value might be overwritten in takeover)
 dns.enable                   on         (value might be overwritten in takeover)
 fcp.enable                   off        
 flexcache.access             none       
@@ -500,13 +500,13 @@ nfs.v2.df_2gb_lim            off
 nfs.v3.enable                on         
 nfs.v4.acl.enable            off        
 nfs.v4.enable                off        
-nfs.v4.id.domain             mis.cypress.com 
+nfs.v4.id.domain             mis.example.org 
 nfs.v4.read_delegation       off        
 nfs.v4.write_delegation      off        
 nfs.webnfs.enable            off        
 nfs.webnfs.rootdir           XXX        
 nfs.webnfs.rootdir.set       off        
-nis.domainname               mis.cypress.com (value might be overwritten in takeover)
+nis.domainname               mis.example.org (value might be overwritten in takeover)
 nis.enable                   on         (value might be overwritten in takeover)
 nis.group_update.enable      off        (value might be overwritten in takeover)
 nis.group_update_schedule    24         (value might be overwritten in takeover)
@@ -580,7 +580,7 @@ timed.max_skew               30m        (same value in local+partner recommended
 timed.min_skew               0          (same value in local+partner recommended)
 timed.proto                  ntp        (same value in local+partner recommended)
 timed.sched                  1h         (same value in local+partner recommended)
-timed.servers                clock1.cypress.com,clock2.cypress.com,clock3.cypress.com (same value in local+partner recommended)
+timed.servers                clock1.example.org,clock2.example.org,clock3.example.org (same value in local+partner recommended)
 timed.window                 0s         (same value in local+partner recommended)
 trusted.hosts                *          (same value required in local+partner)
 vol.copy.throttle            10         (value might be overwritten in takeover)
@@ -895,7 +895,7 @@ oren-vif: 1 link, transmit 'IP Load balancing', VIF Type 'multi_mode' fail 'defa
 
 ===== NIS info =====
 
-  NIS domain is mis.cypress.com 
+  NIS domain is mis.example.org 
 
   NIS group cache has been disabled 
 
@@ -2279,8 +2279,8 @@ IP Address       State   Last Polled                  Avg RTT Calls  Errs
 172.16.2.3       DOWN    Fri Jan 13 09:15:25 PST 2012       1   254    19
 157.95.61.201    DOWN                                       0    19    19
 
-Default domain: mis.cypress.com
-Search domains: mis.cypress.com cypress.com 
+Default domain: mis.example.org
+Search domains: mis.example.org example.org 
 
 
 ===== ENVIRONMENT =====
@@ -3033,9 +3033,9 @@ vif create multi oren-vif -b ip e0a e1a
 ifconfig oren-vif `hostname`-oren-vif mediatype auto partner master-vif
 route add default 172.16.1.1 1
 routed on
-options dns.domainname mis.cypress.com
+options dns.domainname mis.example.org
 options dns.enable on
-options nis.domainname mis.cypress.com
+options nis.domainname mis.example.org
 options nis.enable on
 savecore
 ===== RESOLV-CONF =====
@@ -3954,7 +3954,7 @@ X-Netapp-asup-partner-serial-num: 0101179385
 X-Netapp-asup-model-name: FAS3020
 X-Netapp-asup-conf-version: 7.0.0
 X-Netapp-asup-conf-checksum: jGwimgg8oqBdK/sjAkfFBg==
-X-Netapp-asup-from: netapp@cypress.com
+X-Netapp-asup-from: netapp@example.org
 
 ===== MESSAGES =====
 Sun Mar 11 00:00:00 PST [oren-netapp: kern.log.rotate:notice]: System oren-netapp (ID 0101165342) is running NetApp Release 7.0.3

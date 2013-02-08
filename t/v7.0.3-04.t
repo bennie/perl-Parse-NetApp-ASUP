@@ -83,7 +83,7 @@ substr($extract_df_s,0,20) eq '' ? ok(41) : nok(41);
 
 my $extract_dns_info = $pna->extract_dns_info();
 length($extract_dns_info) eq '542' ? ok(42) : nok(42);
-md5_hex($extract_dns_info) eq 'a4cdf94b2a86c7711e1436783ae6d5c1' ? ok(43) : nok(43);
+md5_hex($extract_dns_info) eq '873e31702fb219692fd68597751e78eb' ? ok(43) : nok(43);
 substr($extract_dns_info,0,20) eq '===== DNS info =====' ? ok(44) : nok(44);
 
 my $extract_ecc_memory_scrubber_stats = $pna->extract_ecc_memory_scrubber_stats();
@@ -98,7 +98,7 @@ substr($extract_environment,0,20) eq '===== ENVIRONMENT ==' ? ok(50) : nok(50);
 
 my $extract_exports = $pna->extract_exports();
 length($extract_exports) eq '2055' ? ok(51) : nok(51);
-md5_hex($extract_exports) eq '575908c24d2b58328bfa46b792190695' ? ok(52) : nok(52);
+md5_hex($extract_exports) eq '42f7ccb8ab42792d366d31af9f8bfdfa' ? ok(52) : nok(52);
 substr($extract_exports,0,20) eq '/vol/vol_neato_cspi_' ? ok(53) : nok(53);
 
 my $extract_failed_disk_registry = $pna->extract_failed_disk_registry();
@@ -329,7 +329,7 @@ substr($extract_nfsstat_d,0,20) eq '===== NFSSTAT-D ====' ? ok(188) : nok(188);
 
 my $extract_nis_info = $pna->extract_nis_info();
 length($extract_nis_info) eq '334' ? ok(189) : nok(189);
-md5_hex($extract_nis_info) eq '6f04f1f3a2ab57d8817512c1b908b15e' ? ok(190) : nok(190);
+md5_hex($extract_nis_info) eq '052488c2dba57434eb85df367d4ef567' ? ok(190) : nok(190);
 substr($extract_nis_info,0,20) eq '===== NIS info =====' ? ok(191) : nok(191);
 
 my $extract_nsswitch_conf = $pna->extract_nsswitch_conf();
@@ -339,7 +339,7 @@ substr($extract_nsswitch_conf,0,20) eq '' ? ok(194) : nok(194);
 
 my $extract_options = $pna->extract_options();
 length($extract_options) eq '16834' ? ok(195) : nok(195);
-md5_hex($extract_options) eq '2ed1c852869b97d90ff77c497a7493af' ? ok(196) : nok(196);
+md5_hex($extract_options) eq '179981dd64d567c362ed10e65fcc5822' ? ok(196) : nok(196);
 substr($extract_options,0,20) eq '===== OPTIONS =====
 ' ? ok(197) : nok(197);
 
@@ -645,7 +645,7 @@ substr($extract_vscan_scanners,0,20) eq '===== VSCAN SCANNERS' ? ok(374) : nok(3
 
 my $extract_xheader = $pna->extract_xheader();
 length($extract_xheader) eq '615' ? ok(375) : nok(375);
-md5_hex($extract_xheader) eq 'e98532e060c0adf2dcd429e3761c32da' ? ok(376) : nok(376);
+md5_hex($extract_xheader) eq '1fab43af88c982247cf6818502b6e384' ? ok(376) : nok(376);
 substr($extract_xheader,0,20) eq '===== X-HEADER DATA ' ? ok(377) : nok(377);
 
 BEGIN { plan tests => 377 };
