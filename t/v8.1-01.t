@@ -283,7 +283,7 @@ md5_hex($extract_lun_config_check) eq 'd41d8cd98f00b204e9800998ecf8427e' ? ok(16
 substr($extract_lun_config_check,0,20) eq '' ? ok(164) : nok(164);
 
 my $extract_lun_configuration = $pna->extract_lun_configuration();
-length($extract_lun_configuration) eq '' ? ok(165) : nok(165);
+length($extract_lun_configuration) eq '0' ? ok(165) : nok(165);
 md5_hex($extract_lun_configuration) eq 'd41d8cd98f00b204e9800998ecf8427e' ? ok(166) : nok(166);
 substr($extract_lun_configuration,0,20) eq '' ? ok(167) : nok(167);
 
@@ -298,9 +298,11 @@ md5_hex($extract_lun_statistics) eq 'd41d8cd98f00b204e9800998ecf8427e' ? ok(172)
 substr($extract_lun_statistics,0,20) eq '' ? ok(173) : nok(173);
 
 my $extract_messages = $pna->extract_messages();
-length($extract_messages) eq '' ? ok(174) : nok(174);
-md5_hex($extract_messages) eq 'd41d8cd98f00b204e9800998ecf8427e' ? ok(175) : nok(175);
-substr($extract_messages,0,20) eq '' ? ok(176) : nok(176);
+length($extract_messages) eq '2' ? ok(174) : nok(174);
+md5_hex($extract_messages) eq 'e1c06d85ae7b8b032bef47e42e4c08f9' ? ok(175) : nok(175);
+substr($extract_messages,0,20) eq '
+
+' ? ok(176) : nok(176);
 
 my $extract_nbtstat_c = $pna->extract_nbtstat_c();
 length($extract_nbtstat_c) eq '0' ? ok(177) : nok(177);
@@ -348,7 +350,7 @@ md5_hex($extract_priority_show) eq 'd41d8cd98f00b204e9800998ecf8427e' ? ok(202) 
 substr($extract_priority_show,0,20) eq '' ? ok(203) : nok(203);
 
 my $extract_qtree_status = $pna->extract_qtree_status();
-length($extract_qtree_status) eq '' ? ok(204) : nok(204);
+length($extract_qtree_status) eq '0' ? ok(204) : nok(204);
 md5_hex($extract_qtree_status) eq 'd41d8cd98f00b204e9800998ecf8427e' ? ok(205) : nok(205);
 substr($extract_qtree_status,0,20) eq '' ? ok(206) : nok(206);
 
@@ -633,7 +635,7 @@ md5_hex($extract_vscan_scanners) eq 'd41d8cd98f00b204e9800998ecf8427e' ? ok(373)
 substr($extract_vscan_scanners,0,20) eq '' ? ok(374) : nok(374);
 
 my $extract_xheader = $pna->extract_xheader();
-length($extract_xheader) eq '' ? ok(375) : nok(375);
+length($extract_xheader) eq '0' ? ok(375) : nok(375);
 md5_hex($extract_xheader) eq 'd41d8cd98f00b204e9800998ecf8427e' ? ok(376) : nok(376);
 substr($extract_xheader,0,20) eq '' ? ok(377) : nok(377);
 
