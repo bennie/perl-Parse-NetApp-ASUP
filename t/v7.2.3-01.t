@@ -290,7 +290,7 @@ md5_hex($extract_lun_config_check) eq 'd41d8cd98f00b204e9800998ecf8427e' ? ok(16
 substr($extract_lun_config_check,0,20) eq '' ? ok(164) : nok(164);
 
 my $extract_lun_configuration = $pna->extract_lun_configuration();
-length($extract_lun_configuration) eq '' ? ok(165) : nok(165);
+length($extract_lun_configuration) eq '0' ? ok(165) : nok(165);
 md5_hex($extract_lun_configuration) eq 'd41d8cd98f00b204e9800998ecf8427e' ? ok(166) : nok(166);
 substr($extract_lun_configuration,0,20) eq '' ? ok(167) : nok(167);
 

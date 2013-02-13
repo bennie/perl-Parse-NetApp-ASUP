@@ -1157,9 +1157,7 @@ sub extract_exports {
 	return join("\n",@trim) . "\n" if scalar(@trim);
 
 	# give up
-	return undef;
-
-
+	return '';
 }
 
 =head3 extract_failed_disk_registry()
@@ -1643,7 +1641,7 @@ sub extract_lun_configuration {
 	return join("\n",@trim) . "\n" if scalar(@trim);	
 
 	# give up
-	return undef;
+	return '';
 }
 
 =head3 extract_lun_hist()
@@ -1676,8 +1674,7 @@ sub extract_lun_statistics {
 
 sub extract_messages {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-
-	my $trim;
+	my $trim = '';
 
 	if ( $raw =~ /(===== MESSAGES =====.*?)(=====|\n\n)/s ) { # Often the last item
 		$trim = $1;
@@ -1687,7 +1684,6 @@ sub extract_messages {
 		$trim = "===== MESSAGES =====\n" . $1;
 	}
 
-	return undef unless $trim;
 	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
 	return $trim;	
 }
@@ -1835,7 +1831,7 @@ sub extract_qtree_status {
 	return join("\n",@trim) . "\n" if scalar(@trim);
 
 	# give up
-	return undef;
+	return '';
 }
 
 =head3 extract_quotas()
@@ -2540,7 +2536,7 @@ sub extract_xheader {
 	return join("\n",@trim) . "\n" if scalar(@trim);
 
 	# give up
-	return undef;
+	return '';
 }
 
 1;
