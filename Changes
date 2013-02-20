@@ -2,5 +2,16 @@ Revision history for Parse::NetApp::ASUP
 
 VERSIONTAG  DATETAG
 
+	Updates to reduce RAM consumption so full-field tests require less resources.
+	Removal of some unused methods.
+	Automation generation of MANIFEST.
+
+1.09  2013/02/12
+
+	Updates to correct errors in test suite.
+	Minor corrections to documentation.
+
+1.07  2013/02/07
+
 	Initial publication.
 	Adapted for both OO and non-OO methods.
