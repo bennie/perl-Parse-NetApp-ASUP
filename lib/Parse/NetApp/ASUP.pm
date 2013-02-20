@@ -938,9 +938,12 @@ sub parse_xheader {
 
 sub extract_acp_list_all {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== ACP LIST ALL =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== ACP LIST ALL =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -950,9 +953,12 @@ sub extract_acp_list_all {
 
 sub extract_aggr_status {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0]; 
-	return '' unless $raw =~ /(===== AGGR-STATUS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== AGGR-STATUS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -962,9 +968,12 @@ sub extract_aggr_status {
 
 sub extract_cf_monitor {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== CF MONITOR =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== CF MONITOR =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -974,9 +983,12 @@ sub extract_cf_monitor {
 
 sub extract_cifs_domaininfo {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== CIFS DOMAININFO =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== CIFS DOMAININFO =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -986,9 +998,12 @@ sub extract_cifs_domaininfo {
 
 sub extract_cifs_sessions {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== CIFS SESSIONS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== CIFS SESSIONS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -998,9 +1013,12 @@ sub extract_cifs_sessions {
 
 sub extract_cifs_shares {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== CIFS SHARES =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== CIFS SHARES =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1010,9 +1028,12 @@ sub extract_cifs_shares {
 
 sub extract_cifs_stat {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== CIFS STAT =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== CIFS STAT =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1022,9 +1043,12 @@ sub extract_cifs_stat {
 
 sub extract_cluster_monitor {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== CLUSTER MONITOR =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== CLUSTER MONITOR =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1034,9 +1058,12 @@ sub extract_cluster_monitor {
 
 sub extract_df {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== DF =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== DF =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1046,9 +1073,12 @@ sub extract_df {
 
 sub extract_df_a {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== DF-A =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== DF-A =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1058,9 +1088,12 @@ sub extract_df_a {
 
 sub extract_df_i {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== DF-I =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== DF-I =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1070,9 +1103,12 @@ sub extract_df_i {
 
 sub extract_df_r {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== DF-R =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== DF-R =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1082,9 +1118,12 @@ sub extract_df_r {
 
 sub extract_df_s {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== DF-S =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== DF-S =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1094,9 +1133,12 @@ sub extract_df_s {
 
 sub extract_dns_info {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== DNS info =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== DNS info =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1106,9 +1148,12 @@ sub extract_dns_info {
 
 sub extract_ecc_memory_scrubber_stats {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== ECC MEMORY SCRUBBER STATS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== ECC MEMORY SCRUBBER STATS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1118,9 +1163,12 @@ sub extract_ecc_memory_scrubber_stats {
 
 sub extract_environment {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== ENVIRONMENT =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== ENVIRONMENT =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1166,9 +1214,12 @@ sub extract_exports {
 
 sub extract_failed_disk_registry {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== FAILED_DISK_REGISTRY =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== FAILED_DISK_REGISTRY =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1178,9 +1229,12 @@ sub extract_failed_disk_registry {
 
 sub extract_fc_device_map {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== FC DEVICE MAP =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== FC DEVICE MAP =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1190,9 +1244,12 @@ sub extract_fc_device_map {
 
 sub extract_fc_link_stats {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== FC LINK STATS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== FC LINK STATS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1202,9 +1259,12 @@ sub extract_fc_link_stats {
 
 sub extract_fc_stats {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== FC STATS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== FC STATS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1214,9 +1274,12 @@ sub extract_fc_stats {
 
 sub extract_fcp_cfmode {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== FCP CFMODE =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== FCP CFMODE =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1226,9 +1289,12 @@ sub extract_fcp_cfmode {
 
 sub extract_fcp_initiator_status {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== FCP INITIATOR STATUS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== FCP INITIATOR STATUS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1238,9 +1304,12 @@ sub extract_fcp_initiator_status {
 
 sub extract_fcp_status {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== FCP STATUS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== FCP STATUS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1250,9 +1319,12 @@ sub extract_fcp_status {
 
 sub extract_fcp_target_adapters {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== FCP TARGET ADAPTERS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== FCP TARGET ADAPTERS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1262,9 +1334,12 @@ sub extract_fcp_target_adapters {
 
 sub extract_fcp_target_configuration {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== FCP TARGET CONFIGURATION =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== FCP TARGET CONFIGURATION =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1274,9 +1349,12 @@ sub extract_fcp_target_configuration {
 
 sub extract_fcp_target_stats {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== FCP TARGET STATS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== FCP TARGET STATS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1286,9 +1364,12 @@ sub extract_fcp_target_stats {
 
 sub extract_flash_card_info {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== FLASH CARD INFO =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== FLASH CARD INFO =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1299,9 +1380,12 @@ sub extract_flash_card_info {
 sub extract_fmm_data {
 	# Space at end to handle lots of equal signs in the content.
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== FMM-DATA =====.*?)===== /s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== FMM-DATA =====.*?)===== /s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1311,9 +1395,12 @@ sub extract_fmm_data {
 
 sub extract_fpolicy {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== FPOLICY =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== FPOLICY =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1323,9 +1410,12 @@ sub extract_fpolicy {
 
 sub extract_headers {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(GENERATED_ON=.*?\n)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(GENERATED_ON=.*?\n)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1335,9 +1425,12 @@ sub extract_headers {
 
 sub extract_hosts {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== HOSTS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== HOSTS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1347,9 +1440,12 @@ sub extract_hosts {
 
 sub extract_httpstat {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== HTTPSTAT =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== HTTPSTAT =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1359,9 +1455,12 @@ sub extract_httpstat {
 
 sub extract_hwassist_stats {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== HWASSIST_STATS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== HWASSIST_STATS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1371,9 +1470,12 @@ sub extract_hwassist_stats {
 
 sub extract_ifconfig_a {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== IFCONFIG-A =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== IFCONFIG-A =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1383,9 +1485,12 @@ sub extract_ifconfig_a {
 
 sub extract_ifgrp_status {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== IFGRP-STATUS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== IFGRP-STATUS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1395,9 +1500,12 @@ sub extract_ifgrp_status {
 
 sub extract_ifstat_a {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== IFSTAT-A =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== IFSTAT-A =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1407,9 +1515,12 @@ sub extract_ifstat_a {
 
 sub extract_initiator_groups {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== INITIATOR GROUPS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== INITIATOR GROUPS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1419,9 +1530,12 @@ sub extract_initiator_groups {
 
 sub extract_interconnect_config {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== INTERCONNECT CONFIG =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== INTERCONNECT CONFIG =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1431,9 +1545,12 @@ sub extract_interconnect_config {
 
 sub extract_interconnect_stats {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== INTERCONNECT STATS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== INTERCONNECT STATS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1443,9 +1560,12 @@ sub extract_interconnect_stats {
 
 sub extract_iscsi_alias {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== ISCSI ALIAS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== ISCSI ALIAS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1455,9 +1575,12 @@ sub extract_iscsi_alias {
 
 sub extract_iscsi_connections {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== ISCSI CONNECTIONS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== ISCSI CONNECTIONS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1467,9 +1590,12 @@ sub extract_iscsi_connections {
 
 sub extract_iscsi_initiator_status {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== ISCSI INITIATOR STATUS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== ISCSI INITIATOR STATUS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1479,9 +1605,12 @@ sub extract_iscsi_initiator_status {
 
 sub extract_iscsi_interface {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== ISCSI INTERFACE =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== ISCSI INTERFACE =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1491,9 +1620,12 @@ sub extract_iscsi_interface {
 
 sub extract_iscsi_interface_accesslist {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== ISCSI INTERFACE ACCESSLIST =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== ISCSI INTERFACE ACCESSLIST =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1503,9 +1635,12 @@ sub extract_iscsi_interface_accesslist {
 
 sub extract_iscsi_isns {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== ISCSI ISNS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== ISCSI ISNS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1515,9 +1650,12 @@ sub extract_iscsi_isns {
 
 sub extract_iscsi_nodename {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== ISCSI NODENAME =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== ISCSI NODENAME =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1527,9 +1665,12 @@ sub extract_iscsi_nodename {
 
 sub extract_iscsi_portals {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== ISCSI PORTALS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== ISCSI PORTALS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1539,9 +1680,12 @@ sub extract_iscsi_portals {
 
 sub extract_iscsi_security {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== ISCSI SECURITY =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== ISCSI SECURITY =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1551,9 +1695,12 @@ sub extract_iscsi_security {
 
 sub extract_iscsi_sessions {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== ISCSI SESSIONS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== ISCSI SESSIONS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1563,9 +1710,12 @@ sub extract_iscsi_sessions {
 
 sub extract_iscsi_statistics {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== ISCSI STATISTICS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== ISCSI STATISTICS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1575,9 +1725,12 @@ sub extract_iscsi_statistics {
 
 sub extract_iscsi_status {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== ISCSI STATUS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== ISCSI STATUS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1587,9 +1740,12 @@ sub extract_iscsi_status {
 
 sub extract_iscsi_target_portal_groups {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== ISCSI TARGET PORTAL GROUPS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== ISCSI TARGET PORTAL GROUPS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1599,9 +1755,12 @@ sub extract_iscsi_target_portal_groups {
 
 sub extract_lun_config_check {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== LUN CONFIG CHECK =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== LUN CONFIG CHECK =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1650,9 +1809,12 @@ sub extract_lun_configuration {
 
 sub extract_lun_hist {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== LUN HIST =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== LUN HIST =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1662,9 +1824,12 @@ sub extract_lun_hist {
 
 sub extract_lun_statistics {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== LUN STATISTICS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== LUN STATISTICS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1685,6 +1850,8 @@ sub extract_messages {
 	}
 
 	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+
+	undef($raw);
 	return $trim;	
 }
 
@@ -1694,9 +1861,12 @@ sub extract_messages {
 
 sub extract_nbtstat_c {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== NBTSTAT-C =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== NBTSTAT-C =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1706,9 +1876,12 @@ sub extract_nbtstat_c {
 
 sub extract_netstat_s {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== NETSTAT-S =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== NETSTAT-S =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1718,9 +1891,12 @@ sub extract_netstat_s {
 
 sub extract_nfsstat_cc {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== NFSSTAT-CC =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== NFSSTAT-CC =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1730,9 +1906,12 @@ sub extract_nfsstat_cc {
 
 sub extract_nfsstat_d {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== NFSSTAT-D =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== NFSSTAT-D =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1742,9 +1921,12 @@ sub extract_nfsstat_d {
 
 sub extract_nis_info {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== NIS info =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== NIS info =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1754,9 +1936,12 @@ sub extract_nis_info {
 
 sub extract_nsswitch_conf {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== NSSWITCH-CONF =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== NSSWITCH-CONF =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1766,9 +1951,12 @@ sub extract_nsswitch_conf {
 
 sub extract_options {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== OPTIONS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== OPTIONS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1778,9 +1966,12 @@ sub extract_options {
 
 sub extract_portsets {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== PORTSETS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== PORTSETS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1790,9 +1981,12 @@ sub extract_portsets {
 
 sub extract_priority_show {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== PRIORITY_SHOW =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== PRIORITY_SHOW =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1840,9 +2034,12 @@ sub extract_qtree_status {
 
 sub extract_quotas {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== QUOTAS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== QUOTAS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1852,9 +2049,12 @@ sub extract_quotas {
 
 sub extract_rc {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== RC =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== RC =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1864,9 +2064,12 @@ sub extract_rc {
 
 sub extract_resolv_conf {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== RESOLV-CONF =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== RESOLV-CONF =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1876,9 +2079,12 @@ sub extract_resolv_conf {
 
 sub extract_route_gsn {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== ROUTE-GSN=====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== ROUTE-GSN=====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1888,9 +2094,12 @@ sub extract_route_gsn {
 
 sub extract_sas_adapter_state {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SAS ADAPTER STATE =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SAS ADAPTER STATE =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1900,9 +2109,12 @@ sub extract_sas_adapter_state {
 
 sub extract_sas_dev_stats {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SAS DEV STATS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SAS DEV STATS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1912,9 +2124,12 @@ sub extract_sas_dev_stats {
 
 sub extract_sas_expander_map {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SAS EXPANDER MAP =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SAS EXPANDER MAP =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1924,9 +2139,12 @@ sub extract_sas_expander_map {
 
 sub extract_sas_expander_phy_state {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SAS EXPANDER PHY STATE =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SAS EXPANDER PHY STATE =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1936,9 +2154,12 @@ sub extract_sas_expander_phy_state {
 
 sub extract_sas_shelf {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SAS SHELF =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SAS SHELF =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1948,9 +2169,12 @@ sub extract_sas_shelf {
 
 sub extract_service_usage {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SERVICE USAGE =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SERVICE USAGE =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1960,9 +2184,12 @@ sub extract_service_usage {
 
 sub extract_shelf_log_esh {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SHELF-LOG-ESH =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SHELF-LOG-ESH =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1972,9 +2199,12 @@ sub extract_shelf_log_esh {
 
 sub extract_shelf_log_iom {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SHELF-LOG-IOM =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SHELF-LOG-IOM =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1984,9 +2214,12 @@ sub extract_shelf_log_iom {
 
 sub extract_sis_stat {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SIS STAT =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SIS STAT =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -1996,9 +2229,12 @@ sub extract_sis_stat {
 
 sub extract_sis_stat_l {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SIS STAT L =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SIS STAT L =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2008,9 +2244,12 @@ sub extract_sis_stat_l {
 
 sub extract_sis_status {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SIS STATUS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SIS STATUS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2020,9 +2259,12 @@ sub extract_sis_status {
 
 sub extract_sis_status_l {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SIS STATUS L =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SIS STATUS L =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2032,9 +2274,12 @@ sub extract_sis_status_l {
 
 sub extract_sm_allow {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SM-ALLOW =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SM-ALLOW =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2044,9 +2289,12 @@ sub extract_sm_allow {
 
 sub extract_sm_conf {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SM-CONF =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SM-CONF =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2056,9 +2304,12 @@ sub extract_sm_conf {
 
 sub extract_snap_list_n {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SNAP-LIST-N =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SNAP-LIST-N =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2068,9 +2319,12 @@ sub extract_snap_list_n {
 
 sub extract_snap_list_n_a {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SNAP-LIST-N-A =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SNAP-LIST-N-A =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2080,9 +2334,12 @@ sub extract_snap_list_n_a {
 
 sub extract_snap_reserve {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SNAP-RESERVE =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SNAP-RESERVE =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2092,9 +2349,12 @@ sub extract_snap_reserve {
 
 sub extract_snap_reserve_a {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SNAP-RESERVE-A =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SNAP-RESERVE-A =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2104,9 +2364,12 @@ sub extract_snap_reserve_a {
 
 sub extract_snap_sched {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SNAP-SCHED =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SNAP-SCHED =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2116,9 +2379,12 @@ sub extract_snap_sched {
 
 sub extract_snap_sched_a {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SNAP-SCHED-A =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SNAP-SCHED-A =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2128,9 +2394,12 @@ sub extract_snap_sched_a {
 
 sub extract_snap_status {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SNAP-STATUS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SNAP-STATUS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2140,9 +2409,12 @@ sub extract_snap_status {
 
 sub extract_snap_status_a {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SNAP-STATUS-A =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SNAP-STATUS-A =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2152,9 +2424,12 @@ sub extract_snap_status_a {
 
 sub extract_snapmirror_destinations {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SNAPMIRROR DESTINATIONS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SNAPMIRROR DESTINATIONS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2164,9 +2439,12 @@ sub extract_snapmirror_destinations {
 
 sub extract_snapmirror_status {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SNAPMIRROR STATUS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SNAPMIRROR STATUS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2176,9 +2454,12 @@ sub extract_snapmirror_status {
 
 sub extract_snapvault_destinations {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SNAPVAULT DESTINATIONS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SNAPVAULT DESTINATIONS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2188,9 +2469,12 @@ sub extract_snapvault_destinations {
 
 sub extract_snapvault_snap_sched {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SNAPVAULT SNAP SCHED =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SNAPVAULT SNAP SCHED =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2200,9 +2484,12 @@ sub extract_snapvault_snap_sched {
 
 sub extract_snapvault_status_l {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SNAPVAULT STATUS L =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SNAPVAULT STATUS L =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2212,9 +2499,12 @@ sub extract_snapvault_status_l {
 
 sub extract_snaplock {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SNAPLOCK =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SNAPLOCK =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2224,9 +2514,12 @@ sub extract_snaplock {
 
 sub extract_snaplock_clock {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SNAPLOCK-CLOCK =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SNAPLOCK-CLOCK =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2236,9 +2529,12 @@ sub extract_snaplock_clock {
 
 sub extract_software_licenses {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SOFTWARE LICENSES =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SOFTWARE LICENSES =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2248,9 +2544,12 @@ sub extract_software_licenses {
 
 sub extract_ssh {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SSH =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SSH =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2260,9 +2559,12 @@ sub extract_ssh {
 
 sub extract_storage {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== STORAGE =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== STORAGE =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2272,9 +2574,12 @@ sub extract_storage {
 
 sub extract_sysconfig_a {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SYSCONFIG-A =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SYSCONFIG-A =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2284,9 +2589,12 @@ sub extract_sysconfig_a {
 
 sub extract_sysconfig_ac {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SYSCONFIG-AC =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SYSCONFIG-AC =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2296,9 +2604,12 @@ sub extract_sysconfig_ac {
 
 sub extract_sysconfig_c {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SYSCONFIG-C =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SYSCONFIG-C =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2308,9 +2619,12 @@ sub extract_sysconfig_c {
 
 sub extract_sysconfig_d {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SYSCONFIG-D =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SYSCONFIG-D =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2320,9 +2634,12 @@ sub extract_sysconfig_d {
 
 sub extract_sysconfig_hardware_ids {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SYSCONFIG HARDWARE IDS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SYSCONFIG HARDWARE IDS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2332,9 +2649,12 @@ sub extract_sysconfig_hardware_ids {
 
 sub extract_sysconfig_m {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SYSCONFIG-M =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SYSCONFIG-M =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2344,9 +2664,12 @@ sub extract_sysconfig_m {
 
 sub extract_sysconfig_r {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SYSCONFIG-R =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SYSCONFIG-R =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2356,9 +2679,12 @@ sub extract_sysconfig_r {
 
 sub extract_system_serial_number {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== SYSTEM SERIAL NUMBER =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== SYSTEM SERIAL NUMBER =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2368,9 +2694,12 @@ sub extract_system_serial_number {
 
 sub extract_unowned_disks {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== UNOWNED-DISKS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== UNOWNED-DISKS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2380,9 +2709,12 @@ sub extract_unowned_disks {
 
 sub extract_usage {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== USAGE =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== USAGE =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2392,9 +2724,12 @@ sub extract_usage {
 
 sub extract_usermap_cfg {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== USERMAP-CFG =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== USERMAP-CFG =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2404,9 +2739,12 @@ sub extract_usermap_cfg {
 
 sub extract_vfiler_startup_times {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== VFILER STARTUP TIMES =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== VFILER STARTUP TIMES =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2416,9 +2754,12 @@ sub extract_vfiler_startup_times {
 
 sub extract_vfilers {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== VFILERS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== VFILERS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2428,9 +2769,12 @@ sub extract_vfilers {
 
 sub extract_vif_status {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== VIF-STATUS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== VIF-STATUS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2440,9 +2784,12 @@ sub extract_vif_status {
 
 sub extract_vlan_stat {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== VLAN STAT =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== VLAN STAT =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2452,9 +2799,12 @@ sub extract_vlan_stat {
 
 sub extract_vol_language {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== VOL-LANGUAGE =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== VOL-LANGUAGE =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2464,9 +2814,12 @@ sub extract_vol_language {
 
 sub extract_vol_status {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== VOL-STATUS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== VOL-STATUS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2476,9 +2829,12 @@ sub extract_vol_status {
 
 sub extract_vscan {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== VSCAN =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== VSCAN =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2488,9 +2844,12 @@ sub extract_vscan {
 
 sub extract_vscan_options {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== VSCAN OPTIONS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== VSCAN OPTIONS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
@@ -2500,9 +2859,12 @@ sub extract_vscan_options {
 
 sub extract_vscan_scanners {
 	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
-	return '' unless $raw =~ /(===== VSCAN SCANNERS =====.*?)=====/s;
-	my $trim = $1;
-	while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	my $trim = '';	
+	if ( $raw =~ /(===== VSCAN SCANNERS =====.*?)=====/s ) {
+		$trim = $1;
+		while ( $trim !~ /\n\n$/s ) { $trim .= "\n"; }
+	}
+	undef($raw);
 	return $trim;
 }
 
