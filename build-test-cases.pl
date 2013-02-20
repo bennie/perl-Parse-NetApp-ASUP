@@ -51,7 +51,7 @@ for my $asup ( sort @asups ) {
   print OUTFILE "my \$pna = Parse::NetApp::ASUP->new();\nmy \$asup = read_file('$asup');\n\n";
   print OUTFILE "my \$ret = \$pna->load(\$asup);\n\$ret == 1 ? ok(1) : nok(1);\n\n";
   print OUTFILE "my \$ver = \$pna->asup_version(\$asup);\n\$ver eq '$ver' ? ok(2) : nok(2);\n\n";
-  
+
   my $count = 2;
   for my $method (@methods) {
     my $pna = Parse::NetApp::ASUP->new();
@@ -75,10 +75,13 @@ for my $asup ( sort @asups ) {
     $sample =~ s/'/\'/g;
     print OUTFILE "substr(\$$method,0,20) eq '$sample' ? ok($count) : nok($count);\n";
 
+print OUTFILE "system(\"ps -o rss -p \$\$\") unless \$ENV{AUTOMATED_TESTING};\n"; # Show memory
+
     print OUTFILE "\n";
   }
   
-  
+print OUTFILE "sleep 10;\n";
+
   print OUTFILE "BEGIN { plan tests => $count };\n";
   close OUTFILE;
 }
