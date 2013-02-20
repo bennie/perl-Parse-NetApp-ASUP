@@ -49,8 +49,8 @@ for my $asup ( sort @asups ) {
   open OUTFILE, '>', $outfile or die $!;
   print OUTFILE "use File::Slurp;\nuse Digest::MD5 qw(md5_hex);\nuse Parse::NetApp::ASUP;\nuse Test;\n\n";
   print OUTFILE "my \$pna = Parse::NetApp::ASUP->new();\nmy \$asup = read_file('$asup');\n\n";
-  print OUTFILE "my \$ret = \$pna->load(\$asup);\n\$ret == 1 ? ok(1) : nok(1);\n\n";
-  print OUTFILE "my \$ver = \$pna->asup_version(\$asup);\n\$ver eq '$ver' ? ok(2) : nok(2);\n\n";
+  print OUTFILE "my \$ret = \$pna->load(\$asup);\n\$ret == 1 ? ok(1) : ok(0);\n\n";
+  print OUTFILE "my \$ver = \$pna->asup_version(\$asup);\n\$ver eq '$ver' ? ok(1) : ok(0);\n\n";
 
   my $count = 2;
   for my $method (@methods) {
@@ -63,24 +63,24 @@ for my $asup ( sort @asups ) {
     my $sample = substr $ret, 0, 20;
     my $hash = md5_hex($ret);
 
-    print OUTFILE "my \$$method = \$pna->$method();\n";
+    print OUTFILE "\$ret = \$pna->$method();\n";
 
     $count++;
-    print OUTFILE "length(\$$method) eq '$chars' ? ok($count) : nok($count);\n";
+    print OUTFILE "length(\$ret) eq '$chars' ? ok(1) : ok(0);\n";
 
     $count++;
-    print OUTFILE "md5_hex(\$$method) eq '$hash' ? ok($count) : nok($count);\n";
+    print OUTFILE "md5_hex(\$ret) eq '$hash' ? ok(1) : ok(0);\n";
 
     $count++;
     $sample =~ s/'/\'/g;
-    print OUTFILE "substr(\$$method,0,20) eq '$sample' ? ok($count) : nok($count);\n";
+    print OUTFILE "substr(\$ret,0,20) eq '$sample' ? ok(1) : nok(0);\n";
 
 print OUTFILE "system(\"ps -o rss -p \$\$\") unless \$ENV{AUTOMATED_TESTING};\n"; # Show memory
 
     print OUTFILE "\n";
   }
   
-print OUTFILE "sleep 10;\n";
+#print OUTFILE "sleep 10 unless \$ENV{AUTOMATED_TESTING};\n";
 
   print OUTFILE "BEGIN { plan tests => $count };\n";
   close OUTFILE;
