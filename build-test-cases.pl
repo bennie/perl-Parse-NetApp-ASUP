@@ -73,7 +73,7 @@ for my $asup ( sort @asups ) {
 
     $count++;
     $sample =~ s/'/\'/g;
-    print OUTFILE "substr(\$ret,0,20) eq '$sample' ? ok(1) : nok(0);\n";
+    print OUTFILE "substr(\$ret,0,20) eq '$sample' ? ok(1) : ok(0);\n";
 
 print OUTFILE "system(\"ps -o rss -p \$\$\") unless \$ENV{AUTOMATED_TESTING};\n"; # Show memory
 
