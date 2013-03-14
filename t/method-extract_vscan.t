@@ -12,13 +12,16 @@ $pna = Parse::NetApp::ASUP->new();
 $asup = read_file('examples/7.0.3/asup01.txt');
 $ret = $pna->load($asup);
 $ret == 1 ? ok(1) : ok(0);
-$ver = $pna->asup_version($asup);
+$ver = $pna->asup_version();
 $ver eq '7.0.3' ? ok(1) : ok(0);
 
+print "VER: $ver / 7.0.3\n" unless $ENV{AUTOMATED_TESTING};
 $ret = $pna->extract_vscan();
-length($ret) eq '0' ? ok(1) : ok(0);
-md5_hex($ret) eq 'd41d8cd98f00b204e9800998ecf8427e' ? ok(1) : ok(0);
-substr($ret,0,20) eq '' ? ok(1) : ok(0);
+length($ret) eq '274' ? ok(1) : ok(0);
+md5_hex($ret) eq '818f8a21bd2fe1d2858a015a5e490013' ? ok(1) : ok(0);
+substr($ret,0,20) eq '===== VSCAN =====
+
+V' ? ok(1) : ok(0);
 
 ### examples/7.0.3/asup02.txt
 
@@ -27,13 +30,16 @@ $pna = Parse::NetApp::ASUP->new();
 $asup = read_file('examples/7.0.3/asup02.txt');
 $ret = $pna->load($asup);
 $ret == 1 ? ok(1) : ok(0);
-$ver = $pna->asup_version($asup);
+$ver = $pna->asup_version();
 $ver eq '7.0.3' ? ok(1) : ok(0);
 
+print "VER: $ver / 7.0.3\n" unless $ENV{AUTOMATED_TESTING};
 $ret = $pna->extract_vscan();
-length($ret) eq '0' ? ok(1) : ok(0);
-md5_hex($ret) eq 'd41d8cd98f00b204e9800998ecf8427e' ? ok(1) : ok(0);
-substr($ret,0,20) eq '' ? ok(1) : ok(0);
+length($ret) eq '274' ? ok(1) : ok(0);
+md5_hex($ret) eq '818f8a21bd2fe1d2858a015a5e490013' ? ok(1) : ok(0);
+substr($ret,0,20) eq '===== VSCAN =====
+
+V' ? ok(1) : ok(0);
 
 ### examples/7.0.3/asup03.txt
 
@@ -42,13 +48,16 @@ $pna = Parse::NetApp::ASUP->new();
 $asup = read_file('examples/7.0.3/asup03.txt');
 $ret = $pna->load($asup);
 $ret == 1 ? ok(1) : ok(0);
-$ver = $pna->asup_version($asup);
+$ver = $pna->asup_version();
 $ver eq '7.0.3' ? ok(1) : ok(0);
 
+print "VER: $ver / 7.0.3\n" unless $ENV{AUTOMATED_TESTING};
 $ret = $pna->extract_vscan();
-length($ret) eq '0' ? ok(1) : ok(0);
-md5_hex($ret) eq 'd41d8cd98f00b204e9800998ecf8427e' ? ok(1) : ok(0);
-substr($ret,0,20) eq '' ? ok(1) : ok(0);
+length($ret) eq '274' ? ok(1) : ok(0);
+md5_hex($ret) eq '818f8a21bd2fe1d2858a015a5e490013' ? ok(1) : ok(0);
+substr($ret,0,20) eq '===== VSCAN =====
+
+V' ? ok(1) : ok(0);
 
 ### examples/7.0.3/asup04.txt
 
@@ -57,13 +66,16 @@ $pna = Parse::NetApp::ASUP->new();
 $asup = read_file('examples/7.0.3/asup04.txt');
 $ret = $pna->load($asup);
 $ret == 1 ? ok(1) : ok(0);
-$ver = $pna->asup_version($asup);
+$ver = $pna->asup_version();
 $ver eq '7.0.3' ? ok(1) : ok(0);
 
+print "VER: $ver / 7.0.3\n" unless $ENV{AUTOMATED_TESTING};
 $ret = $pna->extract_vscan();
-length($ret) eq '0' ? ok(1) : ok(0);
-md5_hex($ret) eq 'd41d8cd98f00b204e9800998ecf8427e' ? ok(1) : ok(0);
-substr($ret,0,20) eq '' ? ok(1) : ok(0);
+length($ret) eq '274' ? ok(1) : ok(0);
+md5_hex($ret) eq '818f8a21bd2fe1d2858a015a5e490013' ? ok(1) : ok(0);
+substr($ret,0,20) eq '===== VSCAN =====
+
+V' ? ok(1) : ok(0);
 
 ### examples/7.2.3/asup01.txt
 
@@ -72,13 +84,16 @@ $pna = Parse::NetApp::ASUP->new();
 $asup = read_file('examples/7.2.3/asup01.txt');
 $ret = $pna->load($asup);
 $ret == 1 ? ok(1) : ok(0);
-$ver = $pna->asup_version($asup);
+$ver = $pna->asup_version();
 $ver eq '7.2.3' ? ok(1) : ok(0);
 
+print "VER: $ver / 7.2.3\n" unless $ENV{AUTOMATED_TESTING};
 $ret = $pna->extract_vscan();
-length($ret) eq '0' ? ok(1) : ok(0);
-md5_hex($ret) eq 'd41d8cd98f00b204e9800998ecf8427e' ? ok(1) : ok(0);
-substr($ret,0,20) eq '' ? ok(1) : ok(0);
+length($ret) eq '274' ? ok(1) : ok(0);
+md5_hex($ret) eq '818f8a21bd2fe1d2858a015a5e490013' ? ok(1) : ok(0);
+substr($ret,0,20) eq '===== VSCAN =====
+
+V' ? ok(1) : ok(0);
 
 ### examples/7.2.3/asup02.txt
 
@@ -87,13 +102,16 @@ $pna = Parse::NetApp::ASUP->new();
 $asup = read_file('examples/7.2.3/asup02.txt');
 $ret = $pna->load($asup);
 $ret == 1 ? ok(1) : ok(0);
-$ver = $pna->asup_version($asup);
+$ver = $pna->asup_version();
 $ver eq '7.2.3' ? ok(1) : ok(0);
 
+print "VER: $ver / 7.2.3\n" unless $ENV{AUTOMATED_TESTING};
 $ret = $pna->extract_vscan();
-length($ret) eq '0' ? ok(1) : ok(0);
-md5_hex($ret) eq 'd41d8cd98f00b204e9800998ecf8427e' ? ok(1) : ok(0);
-substr($ret,0,20) eq '' ? ok(1) : ok(0);
+length($ret) eq '274' ? ok(1) : ok(0);
+md5_hex($ret) eq '818f8a21bd2fe1d2858a015a5e490013' ? ok(1) : ok(0);
+substr($ret,0,20) eq '===== VSCAN =====
+
+V' ? ok(1) : ok(0);
 
 ### examples/7.2.3/asup03.txt
 
@@ -102,13 +120,16 @@ $pna = Parse::NetApp::ASUP->new();
 $asup = read_file('examples/7.2.3/asup03.txt');
 $ret = $pna->load($asup);
 $ret == 1 ? ok(1) : ok(0);
-$ver = $pna->asup_version($asup);
+$ver = $pna->asup_version();
 $ver eq '7.2.3' ? ok(1) : ok(0);
 
+print "VER: $ver / 7.2.3\n" unless $ENV{AUTOMATED_TESTING};
 $ret = $pna->extract_vscan();
-length($ret) eq '0' ? ok(1) : ok(0);
-md5_hex($ret) eq 'd41d8cd98f00b204e9800998ecf8427e' ? ok(1) : ok(0);
-substr($ret,0,20) eq '' ? ok(1) : ok(0);
+length($ret) eq '272' ? ok(1) : ok(0);
+md5_hex($ret) eq '023c920d21ae3af53cfe84ef33401bc5' ? ok(1) : ok(0);
+substr($ret,0,20) eq '===== VSCAN =====
+
+V' ? ok(1) : ok(0);
 
 ### examples/8.1/asup01.txt
 
@@ -117,13 +138,15 @@ $pna = Parse::NetApp::ASUP->new();
 $asup = read_file('examples/8.1/asup01.txt');
 $ret = $pna->load($asup);
 $ret == 1 ? ok(1) : ok(0);
-$ver = $pna->asup_version($asup);
+$ver = $pna->asup_version();
 $ver eq '8.1' ? ok(1) : ok(0);
 
+print "VER: $ver / 8.1\n" unless $ENV{AUTOMATED_TESTING};
 $ret = $pna->extract_vscan();
 length($ret) eq '0' ? ok(1) : ok(0);
 md5_hex($ret) eq 'd41d8cd98f00b204e9800998ecf8427e' ? ok(1) : ok(0);
 substr($ret,0,20) eq '' ? ok(1) : ok(0);
+system("ps -o rss -p $$") unless $ENV{AUTOMATED_TESTING};
 
 
 ### End

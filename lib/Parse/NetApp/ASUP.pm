@@ -91,13 +91,13 @@ Returns the version of the loaded ASUP file.
 =cut
 
 sub asup_version {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	
-	if ( $raw =~ /^VERSION=NetApp Release ([\w\.\d]+)/s ) {
+	if ( $raw =~ /^VERSION=NetApp Release ([\w\.\d]+)/ms ) {
 		return "$1";
 	}
 	
-	if ( $raw =~ /^X-Netapp-asup-os-version: NetApp Release ([\w\.\d]+)/s ) {
+	if ( $raw =~ /^X-Netapp-asup-os-version: NetApp Release ([\w\.\d]+)/ms ) {
 		return "$1";
 	}
 
@@ -934,7 +934,7 @@ sub parse_xheader {
 =cut
 
 sub extract_acp_list_all {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== ACP LIST ALL =====.*?)=====/s ) {
 		$trim = $1;
@@ -949,7 +949,7 @@ sub extract_acp_list_all {
 =cut
 
 sub extract_aggr_status {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0]; 
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0]; 
 	my $trim = '';	
 	if ( $raw =~ /(===== AGGR-STATUS =====.*?)=====/s ) {
 		$trim = $1;
@@ -964,7 +964,7 @@ sub extract_aggr_status {
 =cut
 
 sub extract_cf_monitor {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== CF MONITOR =====.*?)=====/s ) {
 		$trim = $1;
@@ -979,7 +979,7 @@ sub extract_cf_monitor {
 =cut
 
 sub extract_cifs_domaininfo {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== CIFS DOMAININFO =====.*?)=====/s ) {
 		$trim = $1;
@@ -994,7 +994,7 @@ sub extract_cifs_domaininfo {
 =cut
 
 sub extract_cifs_sessions {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== CIFS SESSIONS =====.*?)=====/s ) {
 		$trim = $1;
@@ -1009,7 +1009,7 @@ sub extract_cifs_sessions {
 =cut
 
 sub extract_cifs_shares {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== CIFS SHARES =====.*?)=====/s ) {
 		$trim = $1;
@@ -1024,7 +1024,7 @@ sub extract_cifs_shares {
 =cut
 
 sub extract_cifs_stat {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== CIFS STAT =====.*?)=====/s ) {
 		$trim = $1;
@@ -1039,7 +1039,7 @@ sub extract_cifs_stat {
 =cut
 
 sub extract_cluster_monitor {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== CLUSTER MONITOR =====.*?)=====/s ) {
 		$trim = $1;
@@ -1054,7 +1054,7 @@ sub extract_cluster_monitor {
 =cut
 
 sub extract_df {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== DF =====.*?)=====/s ) {
 		$trim = $1;
@@ -1069,7 +1069,7 @@ sub extract_df {
 =cut
 
 sub extract_df_a {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== DF-A =====.*?)=====/s ) {
 		$trim = $1;
@@ -1084,7 +1084,7 @@ sub extract_df_a {
 =cut
 
 sub extract_df_i {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== DF-I =====.*?)=====/s ) {
 		$trim = $1;
@@ -1099,7 +1099,7 @@ sub extract_df_i {
 =cut
 
 sub extract_df_r {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== DF-R =====.*?)=====/s ) {
 		$trim = $1;
@@ -1114,7 +1114,7 @@ sub extract_df_r {
 =cut
 
 sub extract_df_s {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== DF-S =====.*?)=====/s ) {
 		$trim = $1;
@@ -1129,7 +1129,7 @@ sub extract_df_s {
 =cut
 
 sub extract_dns_info {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== DNS info =====.*?)=====/s ) {
 		$trim = $1;
@@ -1144,7 +1144,7 @@ sub extract_dns_info {
 =cut
 
 sub extract_ecc_memory_scrubber_stats {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== ECC MEMORY SCRUBBER STATS =====.*?)=====/s ) {
 		$trim = $1;
@@ -1159,7 +1159,7 @@ sub extract_ecc_memory_scrubber_stats {
 =cut
 
 sub extract_environment {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== ENVIRONMENT =====.*?)=====/s ) {
 		$trim = $1;
@@ -1174,7 +1174,7 @@ sub extract_environment {
 =cut
 
 sub extract_exports {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	
 	# v7
 	
@@ -1210,7 +1210,7 @@ sub extract_exports {
 =cut
 
 sub extract_failed_disk_registry {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== FAILED_DISK_REGISTRY =====.*?)=====/s ) {
 		$trim = $1;
@@ -1225,7 +1225,7 @@ sub extract_failed_disk_registry {
 =cut
 
 sub extract_fc_device_map {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== FC DEVICE MAP =====.*?)=====/s ) {
 		$trim = $1;
@@ -1240,7 +1240,7 @@ sub extract_fc_device_map {
 =cut
 
 sub extract_fc_link_stats {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== FC LINK STATS =====.*?)=====/s ) {
 		$trim = $1;
@@ -1255,7 +1255,7 @@ sub extract_fc_link_stats {
 =cut
 
 sub extract_fc_stats {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== FC STATS =====.*?)=====/s ) {
 		$trim = $1;
@@ -1270,7 +1270,7 @@ sub extract_fc_stats {
 =cut
 
 sub extract_fcp_cfmode {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== FCP CFMODE =====.*?)=====/s ) {
 		$trim = $1;
@@ -1285,7 +1285,7 @@ sub extract_fcp_cfmode {
 =cut
 
 sub extract_fcp_initiator_status {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== FCP INITIATOR STATUS =====.*?)=====/s ) {
 		$trim = $1;
@@ -1300,7 +1300,7 @@ sub extract_fcp_initiator_status {
 =cut
 
 sub extract_fcp_status {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== FCP STATUS =====.*?)=====/s ) {
 		$trim = $1;
@@ -1315,7 +1315,7 @@ sub extract_fcp_status {
 =cut
 
 sub extract_fcp_target_adapters {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== FCP TARGET ADAPTERS =====.*?)=====/s ) {
 		$trim = $1;
@@ -1330,7 +1330,7 @@ sub extract_fcp_target_adapters {
 =cut
 
 sub extract_fcp_target_configuration {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== FCP TARGET CONFIGURATION =====.*?)=====/s ) {
 		$trim = $1;
@@ -1345,7 +1345,7 @@ sub extract_fcp_target_configuration {
 =cut
 
 sub extract_fcp_target_stats {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== FCP TARGET STATS =====.*?)=====/s ) {
 		$trim = $1;
@@ -1360,7 +1360,7 @@ sub extract_fcp_target_stats {
 =cut
 
 sub extract_flash_card_info {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== FLASH CARD INFO =====.*?)=====/s ) {
 		$trim = $1;
@@ -1376,7 +1376,7 @@ sub extract_flash_card_info {
 
 sub extract_fmm_data {
 	# Space at end to handle lots of equal signs in the content.
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== FMM-DATA =====.*?)===== /s ) {
 		$trim = $1;
@@ -1391,7 +1391,7 @@ sub extract_fmm_data {
 =cut
 
 sub extract_fpolicy {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== FPOLICY =====.*?)=====/s ) {
 		$trim = $1;
@@ -1406,7 +1406,7 @@ sub extract_fpolicy {
 =cut
 
 sub extract_headers {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(GENERATED_ON=.*?\n)=====/s ) {
 		$trim = $1;
@@ -1421,7 +1421,7 @@ sub extract_headers {
 =cut
 
 sub extract_hosts {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== HOSTS =====.*?)=====/s ) {
 		$trim = $1;
@@ -1436,7 +1436,7 @@ sub extract_hosts {
 =cut
 
 sub extract_httpstat {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== HTTPSTAT =====.*?)=====/s ) {
 		$trim = $1;
@@ -1451,7 +1451,7 @@ sub extract_httpstat {
 =cut
 
 sub extract_hwassist_stats {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== HWASSIST_STATS =====.*?)=====/s ) {
 		$trim = $1;
@@ -1466,7 +1466,7 @@ sub extract_hwassist_stats {
 =cut
 
 sub extract_ifconfig_a {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== IFCONFIG-A =====.*?)=====/s ) {
 		$trim = $1;
@@ -1481,7 +1481,7 @@ sub extract_ifconfig_a {
 =cut
 
 sub extract_ifgrp_status {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== IFGRP-STATUS =====.*?)=====/s ) {
 		$trim = $1;
@@ -1496,7 +1496,7 @@ sub extract_ifgrp_status {
 =cut
 
 sub extract_ifstat_a {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== IFSTAT-A =====.*?)=====/s ) {
 		$trim = $1;
@@ -1511,7 +1511,7 @@ sub extract_ifstat_a {
 =cut
 
 sub extract_initiator_groups {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== INITIATOR GROUPS =====.*?)=====/s ) {
 		$trim = $1;
@@ -1526,7 +1526,7 @@ sub extract_initiator_groups {
 =cut
 
 sub extract_interconnect_config {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== INTERCONNECT CONFIG =====.*?)=====/s ) {
 		$trim = $1;
@@ -1541,7 +1541,7 @@ sub extract_interconnect_config {
 =cut
 
 sub extract_interconnect_stats {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== INTERCONNECT STATS =====.*?)=====/s ) {
 		$trim = $1;
@@ -1556,7 +1556,7 @@ sub extract_interconnect_stats {
 =cut
 
 sub extract_iscsi_alias {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== ISCSI ALIAS =====.*?)=====/s ) {
 		$trim = $1;
@@ -1571,7 +1571,7 @@ sub extract_iscsi_alias {
 =cut
 
 sub extract_iscsi_connections {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== ISCSI CONNECTIONS =====.*?)=====/s ) {
 		$trim = $1;
@@ -1586,7 +1586,7 @@ sub extract_iscsi_connections {
 =cut
 
 sub extract_iscsi_initiator_status {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== ISCSI INITIATOR STATUS =====.*?)=====/s ) {
 		$trim = $1;
@@ -1601,7 +1601,7 @@ sub extract_iscsi_initiator_status {
 =cut
 
 sub extract_iscsi_interface {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== ISCSI INTERFACE =====.*?)=====/s ) {
 		$trim = $1;
@@ -1616,7 +1616,7 @@ sub extract_iscsi_interface {
 =cut
 
 sub extract_iscsi_interface_accesslist {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== ISCSI INTERFACE ACCESSLIST =====.*?)=====/s ) {
 		$trim = $1;
@@ -1631,7 +1631,7 @@ sub extract_iscsi_interface_accesslist {
 =cut
 
 sub extract_iscsi_isns {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== ISCSI ISNS =====.*?)=====/s ) {
 		$trim = $1;
@@ -1646,7 +1646,7 @@ sub extract_iscsi_isns {
 =cut
 
 sub extract_iscsi_nodename {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== ISCSI NODENAME =====.*?)=====/s ) {
 		$trim = $1;
@@ -1661,7 +1661,7 @@ sub extract_iscsi_nodename {
 =cut
 
 sub extract_iscsi_portals {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== ISCSI PORTALS =====.*?)=====/s ) {
 		$trim = $1;
@@ -1676,7 +1676,7 @@ sub extract_iscsi_portals {
 =cut
 
 sub extract_iscsi_security {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== ISCSI SECURITY =====.*?)=====/s ) {
 		$trim = $1;
@@ -1691,7 +1691,7 @@ sub extract_iscsi_security {
 =cut
 
 sub extract_iscsi_sessions {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== ISCSI SESSIONS =====.*?)=====/s ) {
 		$trim = $1;
@@ -1706,7 +1706,7 @@ sub extract_iscsi_sessions {
 =cut
 
 sub extract_iscsi_statistics {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== ISCSI STATISTICS =====.*?)=====/s ) {
 		$trim = $1;
@@ -1721,7 +1721,7 @@ sub extract_iscsi_statistics {
 =cut
 
 sub extract_iscsi_status {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== ISCSI STATUS =====.*?)=====/s ) {
 		$trim = $1;
@@ -1736,7 +1736,7 @@ sub extract_iscsi_status {
 =cut
 
 sub extract_iscsi_target_portal_groups {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== ISCSI TARGET PORTAL GROUPS =====.*?)=====/s ) {
 		$trim = $1;
@@ -1751,7 +1751,7 @@ sub extract_iscsi_target_portal_groups {
 =cut
 
 sub extract_lun_config_check {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== LUN CONFIG CHECK =====.*?)=====/s ) {
 		$trim = $1;
@@ -1766,7 +1766,7 @@ sub extract_lun_config_check {
 =cut
 
 sub extract_lun_configuration {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	
 	# v7
 	
@@ -1805,7 +1805,7 @@ sub extract_lun_configuration {
 =cut
 
 sub extract_lun_hist {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== LUN HIST =====.*?)=====/s ) {
 		$trim = $1;
@@ -1820,7 +1820,7 @@ sub extract_lun_hist {
 =cut
 
 sub extract_lun_statistics {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== LUN STATISTICS =====.*?)=====/s ) {
 		$trim = $1;
@@ -1835,7 +1835,7 @@ sub extract_lun_statistics {
 =cut
 
 sub extract_messages {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';
 
 	if ( $raw =~ /(===== MESSAGES =====.*?)(=====|\n\n)/s ) { # Often the last item
@@ -1857,7 +1857,7 @@ sub extract_messages {
 =cut
 
 sub extract_nbtstat_c {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== NBTSTAT-C =====.*?)=====/s ) {
 		$trim = $1;
@@ -1872,7 +1872,7 @@ sub extract_nbtstat_c {
 =cut
 
 sub extract_netstat_s {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== NETSTAT-S =====.*?)=====/s ) {
 		$trim = $1;
@@ -1887,7 +1887,7 @@ sub extract_netstat_s {
 =cut
 
 sub extract_nfsstat_cc {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== NFSSTAT-CC =====.*?)=====/s ) {
 		$trim = $1;
@@ -1902,7 +1902,7 @@ sub extract_nfsstat_cc {
 =cut
 
 sub extract_nfsstat_d {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== NFSSTAT-D =====.*?)=====/s ) {
 		$trim = $1;
@@ -1917,7 +1917,7 @@ sub extract_nfsstat_d {
 =cut
 
 sub extract_nis_info {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== NIS info =====.*?)=====/s ) {
 		$trim = $1;
@@ -1932,7 +1932,7 @@ sub extract_nis_info {
 =cut
 
 sub extract_nsswitch_conf {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== NSSWITCH-CONF =====.*?)=====/s ) {
 		$trim = $1;
@@ -1947,7 +1947,7 @@ sub extract_nsswitch_conf {
 =cut
 
 sub extract_options {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== OPTIONS =====.*?)=====/s ) {
 		$trim = $1;
@@ -1962,7 +1962,7 @@ sub extract_options {
 =cut
 
 sub extract_portsets {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== PORTSETS =====.*?)=====/s ) {
 		$trim = $1;
@@ -1977,7 +1977,7 @@ sub extract_portsets {
 =cut
 
 sub extract_priority_show {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== PRIORITY_SHOW =====.*?)=====/s ) {
 		$trim = $1;
@@ -1992,7 +1992,7 @@ sub extract_priority_show {
 =cut
 
 sub extract_qtree_status {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 
 	# v7
 
@@ -2030,7 +2030,7 @@ sub extract_qtree_status {
 =cut
 
 sub extract_quotas {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== QUOTAS =====.*?)=====/s ) {
 		$trim = $1;
@@ -2045,7 +2045,7 @@ sub extract_quotas {
 =cut
 
 sub extract_rc {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== RC =====.*?)=====/s ) {
 		$trim = $1;
@@ -2060,7 +2060,7 @@ sub extract_rc {
 =cut
 
 sub extract_resolv_conf {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== RESOLV-CONF =====.*?)=====/s ) {
 		$trim = $1;
@@ -2075,7 +2075,7 @@ sub extract_resolv_conf {
 =cut
 
 sub extract_route_gsn {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== ROUTE-GSN=====.*?)=====/s ) {
 		$trim = $1;
@@ -2090,7 +2090,7 @@ sub extract_route_gsn {
 =cut
 
 sub extract_sas_adapter_state {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SAS ADAPTER STATE =====.*?)=====/s ) {
 		$trim = $1;
@@ -2105,7 +2105,7 @@ sub extract_sas_adapter_state {
 =cut
 
 sub extract_sas_dev_stats {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SAS DEV STATS =====.*?)=====/s ) {
 		$trim = $1;
@@ -2120,7 +2120,7 @@ sub extract_sas_dev_stats {
 =cut
 
 sub extract_sas_expander_map {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SAS EXPANDER MAP =====.*?)=====/s ) {
 		$trim = $1;
@@ -2135,7 +2135,7 @@ sub extract_sas_expander_map {
 =cut
 
 sub extract_sas_expander_phy_state {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SAS EXPANDER PHY STATE =====.*?)=====/s ) {
 		$trim = $1;
@@ -2150,7 +2150,7 @@ sub extract_sas_expander_phy_state {
 =cut
 
 sub extract_sas_shelf {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SAS SHELF =====.*?)=====/s ) {
 		$trim = $1;
@@ -2165,7 +2165,7 @@ sub extract_sas_shelf {
 =cut
 
 sub extract_service_usage {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SERVICE USAGE =====.*?)=====/s ) {
 		$trim = $1;
@@ -2180,7 +2180,7 @@ sub extract_service_usage {
 =cut
 
 sub extract_shelf_log_esh {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SHELF-LOG-ESH =====.*?)=====/s ) {
 		$trim = $1;
@@ -2195,7 +2195,7 @@ sub extract_shelf_log_esh {
 =cut
 
 sub extract_shelf_log_iom {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SHELF-LOG-IOM =====.*?)=====/s ) {
 		$trim = $1;
@@ -2210,7 +2210,7 @@ sub extract_shelf_log_iom {
 =cut
 
 sub extract_sis_stat {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SIS STAT =====.*?)=====/s ) {
 		$trim = $1;
@@ -2225,7 +2225,7 @@ sub extract_sis_stat {
 =cut
 
 sub extract_sis_stat_l {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SIS STAT L =====.*?)=====/s ) {
 		$trim = $1;
@@ -2240,7 +2240,7 @@ sub extract_sis_stat_l {
 =cut
 
 sub extract_sis_status {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SIS STATUS =====.*?)=====/s ) {
 		$trim = $1;
@@ -2255,7 +2255,7 @@ sub extract_sis_status {
 =cut
 
 sub extract_sis_status_l {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SIS STATUS L =====.*?)=====/s ) {
 		$trim = $1;
@@ -2270,7 +2270,7 @@ sub extract_sis_status_l {
 =cut
 
 sub extract_sm_allow {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SM-ALLOW =====.*?)=====/s ) {
 		$trim = $1;
@@ -2285,7 +2285,7 @@ sub extract_sm_allow {
 =cut
 
 sub extract_sm_conf {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SM-CONF =====.*?)=====/s ) {
 		$trim = $1;
@@ -2300,7 +2300,7 @@ sub extract_sm_conf {
 =cut
 
 sub extract_snap_list_n {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SNAP-LIST-N =====.*?)=====/s ) {
 		$trim = $1;
@@ -2315,7 +2315,7 @@ sub extract_snap_list_n {
 =cut
 
 sub extract_snap_list_n_a {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SNAP-LIST-N-A =====.*?)=====/s ) {
 		$trim = $1;
@@ -2330,7 +2330,7 @@ sub extract_snap_list_n_a {
 =cut
 
 sub extract_snap_reserve {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SNAP-RESERVE =====.*?)=====/s ) {
 		$trim = $1;
@@ -2345,7 +2345,7 @@ sub extract_snap_reserve {
 =cut
 
 sub extract_snap_reserve_a {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SNAP-RESERVE-A =====.*?)=====/s ) {
 		$trim = $1;
@@ -2360,7 +2360,7 @@ sub extract_snap_reserve_a {
 =cut
 
 sub extract_snap_sched {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SNAP-SCHED =====.*?)=====/s ) {
 		$trim = $1;
@@ -2375,7 +2375,7 @@ sub extract_snap_sched {
 =cut
 
 sub extract_snap_sched_a {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SNAP-SCHED-A =====.*?)=====/s ) {
 		$trim = $1;
@@ -2390,7 +2390,7 @@ sub extract_snap_sched_a {
 =cut
 
 sub extract_snap_status {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SNAP-STATUS =====.*?)=====/s ) {
 		$trim = $1;
@@ -2405,7 +2405,7 @@ sub extract_snap_status {
 =cut
 
 sub extract_snap_status_a {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SNAP-STATUS-A =====.*?)=====/s ) {
 		$trim = $1;
@@ -2420,7 +2420,7 @@ sub extract_snap_status_a {
 =cut
 
 sub extract_snapmirror_destinations {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SNAPMIRROR DESTINATIONS =====.*?)=====/s ) {
 		$trim = $1;
@@ -2435,7 +2435,7 @@ sub extract_snapmirror_destinations {
 =cut
 
 sub extract_snapmirror_status {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SNAPMIRROR STATUS =====.*?)=====/s ) {
 		$trim = $1;
@@ -2450,7 +2450,7 @@ sub extract_snapmirror_status {
 =cut
 
 sub extract_snapvault_destinations {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SNAPVAULT DESTINATIONS =====.*?)=====/s ) {
 		$trim = $1;
@@ -2465,7 +2465,7 @@ sub extract_snapvault_destinations {
 =cut
 
 sub extract_snapvault_snap_sched {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SNAPVAULT SNAP SCHED =====.*?)=====/s ) {
 		$trim = $1;
@@ -2480,7 +2480,7 @@ sub extract_snapvault_snap_sched {
 =cut
 
 sub extract_snapvault_status_l {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SNAPVAULT STATUS L =====.*?)=====/s ) {
 		$trim = $1;
@@ -2495,7 +2495,7 @@ sub extract_snapvault_status_l {
 =cut
 
 sub extract_snaplock {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SNAPLOCK =====.*?)=====/s ) {
 		$trim = $1;
@@ -2510,7 +2510,7 @@ sub extract_snaplock {
 =cut
 
 sub extract_snaplock_clock {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SNAPLOCK-CLOCK =====.*?)=====/s ) {
 		$trim = $1;
@@ -2525,7 +2525,7 @@ sub extract_snaplock_clock {
 =cut
 
 sub extract_software_licenses {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SOFTWARE LICENSES =====.*?)=====/s ) {
 		$trim = $1;
@@ -2540,7 +2540,7 @@ sub extract_software_licenses {
 =cut
 
 sub extract_ssh {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SSH =====.*?)=====/s ) {
 		$trim = $1;
@@ -2555,7 +2555,7 @@ sub extract_ssh {
 =cut
 
 sub extract_storage {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== STORAGE =====.*?)=====/s ) {
 		$trim = $1;
@@ -2570,7 +2570,7 @@ sub extract_storage {
 =cut
 
 sub extract_sysconfig_a {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SYSCONFIG-A =====.*?)=====/s ) {
 		$trim = $1;
@@ -2585,7 +2585,7 @@ sub extract_sysconfig_a {
 =cut
 
 sub extract_sysconfig_ac {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SYSCONFIG-AC =====.*?)=====/s ) {
 		$trim = $1;
@@ -2600,7 +2600,7 @@ sub extract_sysconfig_ac {
 =cut
 
 sub extract_sysconfig_c {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SYSCONFIG-C =====.*?)=====/s ) {
 		$trim = $1;
@@ -2615,7 +2615,7 @@ sub extract_sysconfig_c {
 =cut
 
 sub extract_sysconfig_d {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SYSCONFIG-D =====.*?)=====/s ) {
 		$trim = $1;
@@ -2630,7 +2630,7 @@ sub extract_sysconfig_d {
 =cut
 
 sub extract_sysconfig_hardware_ids {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SYSCONFIG HARDWARE IDS =====.*?)=====/s ) {
 		$trim = $1;
@@ -2645,7 +2645,7 @@ sub extract_sysconfig_hardware_ids {
 =cut
 
 sub extract_sysconfig_m {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SYSCONFIG-M =====.*?)=====/s ) {
 		$trim = $1;
@@ -2660,7 +2660,7 @@ sub extract_sysconfig_m {
 =cut
 
 sub extract_sysconfig_r {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SYSCONFIG-R =====.*?)=====/s ) {
 		$trim = $1;
@@ -2675,7 +2675,7 @@ sub extract_sysconfig_r {
 =cut
 
 sub extract_system_serial_number {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== SYSTEM SERIAL NUMBER =====.*?)=====/s ) {
 		$trim = $1;
@@ -2690,7 +2690,7 @@ sub extract_system_serial_number {
 =cut
 
 sub extract_unowned_disks {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== UNOWNED-DISKS =====.*?)=====/s ) {
 		$trim = $1;
@@ -2705,7 +2705,7 @@ sub extract_unowned_disks {
 =cut
 
 sub extract_usage {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== USAGE =====.*?)=====/s ) {
 		$trim = $1;
@@ -2720,7 +2720,7 @@ sub extract_usage {
 =cut
 
 sub extract_usermap_cfg {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== USERMAP-CFG =====.*?)=====/s ) {
 		$trim = $1;
@@ -2735,7 +2735,7 @@ sub extract_usermap_cfg {
 =cut
 
 sub extract_vfiler_startup_times {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== VFILER STARTUP TIMES =====.*?)=====/s ) {
 		$trim = $1;
@@ -2750,7 +2750,7 @@ sub extract_vfiler_startup_times {
 =cut
 
 sub extract_vfilers {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== VFILERS =====.*?)=====/s ) {
 		$trim = $1;
@@ -2765,7 +2765,7 @@ sub extract_vfilers {
 =cut
 
 sub extract_vif_status {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== VIF-STATUS =====.*?)=====/s ) {
 		$trim = $1;
@@ -2780,7 +2780,7 @@ sub extract_vif_status {
 =cut
 
 sub extract_vlan_stat {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== VLAN STAT =====.*?)=====/s ) {
 		$trim = $1;
@@ -2795,7 +2795,7 @@ sub extract_vlan_stat {
 =cut
 
 sub extract_vol_language {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== VOL-LANGUAGE =====.*?)=====/s ) {
 		$trim = $1;
@@ -2810,7 +2810,7 @@ sub extract_vol_language {
 =cut
 
 sub extract_vol_status {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== VOL-STATUS =====.*?)=====/s ) {
 		$trim = $1;
@@ -2825,7 +2825,7 @@ sub extract_vol_status {
 =cut
 
 sub extract_vscan {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== VSCAN =====.*?)=====/s ) {
 		$trim = $1;
@@ -2840,7 +2840,7 @@ sub extract_vscan {
 =cut
 
 sub extract_vscan_options {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== VSCAN OPTIONS =====.*?)=====/s ) {
 		$trim = $1;
@@ -2855,7 +2855,7 @@ sub extract_vscan_options {
 =cut
 
 sub extract_vscan_scanners {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	my $trim = '';	
 	if ( $raw =~ /(===== VSCAN SCANNERS =====.*?)=====/s ) {
 		$trim = $1;
@@ -2870,7 +2870,7 @@ sub extract_vscan_scanners {
 =cut
 
 sub extract_xheader {
-	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
+	my $raw = defined $_[0]->{asup} ? $_[0]->{asup} : $_[0];
 	
 	# v7
 	if ( $raw =~ /(===== X-HEADER DATA =====.*?)(=====|\n\n)/s ) {

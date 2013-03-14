@@ -58,7 +58,9 @@ for my $method (@methods) {
     print OUTFILE "(\$asup,\$pna,\$ret,\$ver) = (undef,undef,undef,undef);\n";
     print OUTFILE "\$pna = Parse::NetApp::ASUP->new();\n\$asup = read_file('$asup');\n";
     print OUTFILE "\$ret = \$pna->load(\$asup);\n\$ret == 1 ? ok(1) : ok(0);\n";
-    print OUTFILE "\$ver = \$pna->asup_version(\$asup);\n\$ver eq '$ver' ? ok(1) : ok(0);\n\n";
+    print OUTFILE "\$ver = \$pna->asup_version();\n\$ver eq '$ver' ? ok(1) : ok(0);\n\n";
+
+    print OUTFILE "print \"VER: \$ver / $ver\\n\" unless \$ENV{AUTOMATED_TESTING};\n"; # Show memory
 
     $count += 2;
     
@@ -82,8 +84,9 @@ for my $method (@methods) {
     $count++;
     $sample =~ s/'/\'/g;
     print OUTFILE "substr(\$ret,0,20) eq '$sample' ? ok(1) : ok(0);\n";
-
   }
+
+print OUTFILE "system(\"ps -o rss -p \$\$\") unless \$ENV{AUTOMATED_TESTING};\n"; # Show memory
 
   print OUTFILE "\n\n### End\nBEGIN { plan tests => $count };\n";
   close OUTFILE;
