@@ -39,6 +39,58 @@ extract_vscan extract_vscan_options extract_vscan_scanners extract_xheader/;
 
 my @asups = `find examples -type f -name asup??.txt`;
 
+for my $method (@methods) {
+  my $outfile = 't/method-'.$method.'.t';
+  open OUTFILE, '>', $outfile or die $!;
+  print "Building $outfile\n";
+
+  print OUTFILE "use File::Slurp;\nuse Digest::MD5 qw(md5_hex);\nuse Parse::NetApp::ASUP;\nuse Test;\n\n";
+  print OUTFILE "my (\$asup,\$pna,\$ret,\$ver);\n";
+  
+  my $count = 0;
+  
+  for my $asup (@asups) {
+    chomp $asup;
+    $asup =~ /examples\/(.+?)\/asup(\d\d).txt/ or die "Bad ASUP found: $asup";
+    my $ver = $1; my $num = $2;
+
+    print OUTFILE "\n### $asup\n\n";
+    print OUTFILE "(\$asup,\$pna,\$ret,\$ver) = (undef,undef,undef,undef);\n";
+    print OUTFILE "\$pna = Parse::NetApp::ASUP->new();\n\$asup = read_file('$asup');\n";
+    print OUTFILE "\$ret = \$pna->load(\$asup);\n\$ret == 1 ? ok(1) : ok(0);\n";
+    print OUTFILE "\$ver = \$pna->asup_version(\$asup);\n\$ver eq '$ver' ? ok(1) : ok(0);\n\n";
+
+    $count += 2;
+    
+    my $pna = Parse::NetApp::ASUP->new();
+    my $file = read_file($asup);
+    $pna->load($file);
+
+    my $ret = $pna->$method;
+    my $chars = length($ret);
+    my $sample = substr $ret, 0, 20;
+    my $hash = md5_hex($ret);
+
+    print OUTFILE "\$ret = \$pna->$method();\n";
+
+    $count++;
+    print OUTFILE "length(\$ret) eq '$chars' ? ok(1) : ok(0);\n";
+
+    $count++;
+    print OUTFILE "md5_hex(\$ret) eq '$hash' ? ok(1) : ok(0);\n";
+
+    $count++;
+    $sample =~ s/'/\'/g;
+    print OUTFILE "substr(\$ret,0,20) eq '$sample' ? ok(1) : ok(0);\n";
+
+  }
+
+  print OUTFILE "\n\n### End\nBEGIN { plan tests => $count };\n";
+  close OUTFILE;
+}
+
+=head
+
 for my $asup ( sort @asups ) {
   chomp $asup;
   $asup =~ /examples\/(.+?)\/asup(\d\d).txt/ or die "Bad ASUP found: $asup";
@@ -73,7 +125,7 @@ for my $asup ( sort @asups ) {
 
     $count++;
     $sample =~ s/'/\'/g;
-    print OUTFILE "substr(\$ret,0,20) eq '$sample' ? ok(1) : ok(0);\n";
+    print OUTFILE "substr(\$ret,0,20) eq '$sample' ? ok(1) : ok03(0);\n";
 
 print OUTFILE "system(\"ps -o rss -p \$\$\") unless \$ENV{AUTOMATED_TESTING};\n"; # Show memory
 
