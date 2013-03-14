@@ -92,19 +92,16 @@ Returns the version of the loaded ASUP file.
 
 sub asup_version {
 	my $raw = defined $_[0]->{asup} ? \$_[0]->{asup} : $_[0];
-	my $version;
-	for my $line ( split '\n', $raw ) {
-		next unless $line =~ /^VERSION=NetApp Release ([\w\.\d]+)/;
-		$version = $1;
-		last;
+	
+	if ( $raw =~ /^VERSION=NetApp Release ([\w\.\d]+)/s ) {
+		return "$1";
 	}
-	return $version if defined $version;	
-	for my $line ( split '\n', $raw ) {
-		next unless $line =~ /^X-Netapp-asup-os-version: NetApp Release ([\w\.\d]+)/;
-		$version = $1;
-		last;
+	
+	if ( $raw =~ /^X-Netapp-asup-os-version: NetApp Release ([\w\.\d]+)/s ) {
+		return "$1";
 	}
-	return $version ? $version : 'unknown';
+
+	return 'unknown';
 }	
 
 =head3 extract($raw)
