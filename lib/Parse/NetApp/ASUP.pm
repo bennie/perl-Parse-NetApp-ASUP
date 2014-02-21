@@ -2900,9 +2900,22 @@ sub extract_xheader {
 
 1;
 
-=head1 AUTHORSHIP:
+=head1 BUGS AND SOURCE
 
-  Parse::NetApp::ASUP vVERSIONTAG DATETAG
+	Bug tracking for this module: https://rt.cpan.org/Ticket/Display.html?id=?????
 
-  (c) 2012-YEARTAG, Phillip Pollard <bennie@cpan.org>
-  Released under the Perl Artistic License
+	Source hosting: http://www.github.com/bennie/perl-Parse-NetApp-ASUP
+
+=head1 VERSION
+
+	Parse::NetApp::ASUP vVERSIONTAG (DATETAG)
+
+=head1 COPYRIGHT
+
+	(c) 2012-YEARTAG, Phillip Pollard <bennie@cpan.org>
+
+=head1 LICENSE
+
+This source code is released under the "Perl Artistic License 2.0," the text of 
+which is included in the LICENSE file of this distribution. It may also be 
+reviewed here: http://opensource.org/licenses/artistic-license-2.0
