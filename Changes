@@ -2,6 +2,11 @@ Revision history for Parse::NetApp::ASUP
 
 VERSIONTAG  DATETAG
 
+	Updated meta information
+	Added LICENSE file into distribution
+
+1.13  2013/03/14
+
 	Further reduction in RAM consumption.
 	Correction of errors in test suite.
 

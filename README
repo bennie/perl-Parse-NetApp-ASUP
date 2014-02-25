@@ -1,5 +1,5 @@
 
-Parse::NetApp::ASUP - Parse NetApp Weekly Auto Support Files - v VERSIONTAG
+Parse::NetApp::ASUP - Parse NetApp Weekly Auto Support Files - vVERSIONTAG
 
 ================================================================================
 SYNOPSIS:
@@ -31,4 +31,4 @@ AUTHORSHIP:
     Parse::NetApp::ASUP vVERSIONTAG DATETAG
 
     (c) 2012-YEARTAG, Phillip Pollard <bennie@cpan.org>
-    Released under the Perl Artistic License
+    Released under the Perl Artistic License 2.0
