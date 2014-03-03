@@ -10,8 +10,11 @@ $description = $abstract;
 
 $perl_ver = '5.008001';
 
-%requires = ( 
-    'Test::Simple' => 0,
+%requires = (
+	'Carp'         => 0,
+	'Data::Dumper' => 0,
+	'Digest::MD5'  => 2.50,
 	'File::Slurp'  => 9999.19,
-	'Digest::MD5'  => 2.50
+    'Test'         => 0,
+    'Test::Simple' => 0,
 );
