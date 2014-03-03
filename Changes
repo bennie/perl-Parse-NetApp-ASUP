@@ -2,9 +2,13 @@ Revision history for Parse::NetApp::ASUP
 
 VERSIONTAG  DATETAG
 
+	Added a POD test
+	Now automatically building meta info
+
+1.13  2014/02/24
+
 	Updated meta information
 	Added LICENSE file into distribution
-	Added a POD test
 
 1.13  2013/03/14
 
