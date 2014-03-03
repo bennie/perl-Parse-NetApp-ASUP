@@ -13,6 +13,7 @@ examples/7.2.3/asup02.txt
 examples/7.2.3/asup03.txt
 examples/8.1/asup01.txt
 lib/Parse/NetApp/ASUP.pm
+t/00-pod.t
 t/load.t
 t/method-extract_acp_list_all.t
 t/method-extract_aggr_status.t
