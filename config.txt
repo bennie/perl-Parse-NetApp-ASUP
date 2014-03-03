@@ -1,0 +1,17 @@
+### Config
+
+$module = 'Parse::NetApp::ASUP';
+
+$author  = 'Phil Pollard <bennie@cpan.org>';
+$license = 'artistic_2';
+
+$abstract    = 'Parse NetApp Weekly Auto Support Files';
+$description = $abstract;
+
+$perl_ver = '5.008001';
+
+%requires = ( 
+    'Test::Simple' => 0,
+	'File::Slurp'  => 9999.19,
+	'Digest::MD5'  => 2.50
+);
