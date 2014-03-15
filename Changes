@@ -2,6 +2,10 @@ Revision history for Parse::NetApp::ASUP
 
 VERSIONTAG  DATETAG
 
+	Correcting the minimum version of Perl in the META data
+
+1.15  2014/03/03
+
 	Added a POD test
 	Now automatically building meta info
 
